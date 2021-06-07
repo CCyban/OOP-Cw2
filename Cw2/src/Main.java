@@ -20,7 +20,7 @@ public class Main extends Application {
         catch(IOException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load login screen").show();
         }
-        primaryStage.setTitle("Cw1");
+        primaryStage.setTitle("Cw2");
         primaryStage.setResizable(false);
         primaryStage.setScene(new Scene(root, 1000, 600));
 
