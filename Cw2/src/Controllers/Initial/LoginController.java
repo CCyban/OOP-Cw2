@@ -1,5 +1,6 @@
 package Controllers.Initial;
 
+import Classes.Account.Student;
 import Classes.Banks;
 import Classes.Translating;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,8 +15,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.Instant;
+import java.util.Date;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.UUID;
 
 public class LoginController implements Initializable {
 
@@ -39,6 +43,13 @@ public class LoginController implements Initializable {
 
     @FXML
     public void onClick(ActionEvent event) {
+
+
+        Student student = new Student("abc", "last", Date.from(Instant.now()));
+        System.out.println(student.getAccountType());
+
+
+
         SignIn(textFieldAccountNumber.getText());
     }
 
