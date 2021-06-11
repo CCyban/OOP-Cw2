@@ -76,6 +76,20 @@ public class Banks {
         Translating.serialiseObject(resultsList, "resultBank.ser", useDialogOnSuccess, useDialogOnFailure);
     }
 
+    public static void loadUserBank(Boolean useDialogOnSuccess, Boolean useDialogOnFailure, ObservableList observableListToLoadInto) {
+        // Running an attempt to retrieve the data from the questionBank
+        List retrievedData = Translating.deserialiseList("userBank.ser", useDialogOnSuccess, useDialogOnFailure);
+        if (retrievedData != null) {    // If successful then replace the currently used data with the loaded data
+            observableListToLoadInto.clear();
+            observableListToLoadInto.addAll(retrievedData);
+        }
+    }
+
+    public static void saveUserBank(Boolean useDialogOnSuccess, Boolean useDialogOnFailure, ObservableList observableListToSave) {
+        // Sending the data from the ObservableList to be serialised as a testBank file
+        Translating.serialiseObject(observableListToSave.stream().toList() ,"userBank.ser", useDialogOnSuccess, useDialogOnFailure);
+    }
+
     public static void generateBanksIfNotFound() {
         if (Translating.deserialiseList("questionBank.ser", false, false) == null) // If there is no questionBank.ser
         {
@@ -88,6 +102,10 @@ public class Banks {
         if (Translating.deserialiseList("resultBank.ser", false, false) == null)  // If there is no resultBank.ser
         {
             saveResultBank(false, false, FXCollections.observableArrayList());     // Creates empty resultBank
+        }
+        if (Translating.deserialiseList("userBank.ser", false, false) == null)  // If there is no resultBank.ser
+        {
+            saveUserBank(false, false, FXCollections.observableArrayList());     // Creates empty userBank
         }
     }
 }

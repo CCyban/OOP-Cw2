@@ -1,0 +1,188 @@
+package Controllers.Tabs.UserManagement;
+
+import Classes.Account.User;
+import Classes.Banks;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
+import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+
+import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
+import java.util.UUID;
+import java.util.function.Predicate;
+
+public class UserManagementController implements Initializable {
+    @FXML
+    private TextField textFieldSearch;
+
+    @FXML
+    private TableView tableViewUsers;
+
+    private ObservableList<User> usersObservableList = FXCollections.observableArrayList();
+
+    public enum UserDetailsPurpose { Add, Edit };
+
+
+    @Override
+    public void initialize(URL location, ResourceBundle resources) {
+        // Listeners
+        textFieldSearch.textProperty().addListener((Observable, oldValue, newValue) -> { // TODO: Make it search for a given multiple tags, not just one
+
+            // Simply returns true if a tag from a user contains the string from the search (purposely not case-sensitive)
+            Predicate<User> predicateContainsNonCaseStringOnly = q -> (q.getFullName().toUpperCase().contains(textFieldSearch.getText().toUpperCase()));
+
+            // TableView now gets the latest version of the filtered ObservableList
+            tableViewUsers.setItems(usersObservableList.filtered(predicateContainsNonCaseStringOnly));
+
+        });
+
+        // Load all stored users into an ObservableList
+        Banks.loadUserBank(false, true, usersObservableList);
+
+        // Load TableView with its columns & the newly made ObservableList
+        initTableViewUsers();
+    }
+
+    public void initTableViewUsers() {
+        // Set the TableColumns up for the TableView
+        TableColumn idCol = new TableColumn("User Id");
+        idCol.setCellValueFactory(new PropertyValueFactory<User, UUID>("userUUID"));
+        idCol.setPrefWidth(100);
+
+        TableColumn typeCol = new TableColumn("Type");
+        typeCol.setCellValueFactory(new PropertyValueFactory<User, Enums.AccountType>("accountType"));
+
+        TableColumn nameCol = new TableColumn("Name");
+        nameCol.setCellValueFactory(new PropertyValueFactory<User, Integer>("fullName"));
+
+
+        // Add the constructed columns to the TableView
+        tableViewUsers.getColumns().addAll(idCol, typeCol, nameCol);
+
+        // Hook up the observable list with the TableView
+        tableViewUsers.setItems(usersObservableList);
+    }
+
+    @FXML
+    public void onAddNewUserClick(ActionEvent event) {
+        openUserDetails(UserDetailsPurpose.Add);
+    }
+
+    @FXML
+    public void onEditSelectedUserClick(ActionEvent event) {
+        openUserDetails(UserDetailsPurpose.Edit);
+    }
+
+    @FXML
+    public void onRemoveSelectedUserClick(ActionEvent event) {
+        // If a user is not selected then the action cannot proceed
+        if (tableViewUsers.getSelectionModel().getSelectedItem() == null) {
+            new Alert(Alert.AlertType.ERROR, "No user is selected with your action").show();
+            return;
+        }
+
+
+        /*
+        // If the question has a test dependency, do not allow deletion
+        ObservableList<Test> testBank = FXCollections.observableArrayList();
+        Banks.loadTestBank(false, true, testBank);
+
+        Question selectedQuestion = ((Question) tableViewQuestions.getSelectionModel().getSelectedItem());
+
+        for (Test test: testBank) { // For every test in the testBank
+
+            List<UUID> testQuestionUUIDsList = test.getQuestionUUIDs();
+
+            for (UUID questionUUID: testQuestionUUIDsList) {    // For every question in a test, check if it uses a question that the user wishes to delete
+                if (questionUUID.toString().equals(selectedQuestion.getQuestionUUID().toString())) {
+                    new Alert(Alert.AlertType.ERROR, "This user is used in results, therefore it cannot be deleted. Delete the related results first to delete this.").show();
+                    return;
+                }
+            }
+        }
+        // TODO: Add results dependency
+         */
+
+        // Now that we know a user is selected & it has no result dependencies, it can be deleted safely
+        usersObservableList.remove(
+                tableViewUsers.getSelectionModel().getSelectedItem()
+        ); // Removes the selected item from the usersObservableList
+        new Alert(Alert.AlertType.INFORMATION, "User Deleted").show();
+    }
+
+    public void openUserDetails(UserDetailsPurpose userDetailsPurpose) {
+        // If a user is not selected then the action cannot proceed (unless the user is adding an user, which doesn't require any selected user)
+        if (tableViewUsers.getSelectionModel().getSelectedItem() == null && userDetailsPurpose != UserDetailsPurpose.Add) {
+            new Alert(Alert.AlertType.ERROR, "No user is selected with your action").show();
+            return;
+        }
+
+        // Stage configurations
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/Tabs/UserManagement/UserDetails.fxml"));
+        Parent parent = null;
+        try {
+            parent = fxmlLoader.load();
+        }
+        catch (IOException e)
+        {
+            new Alert(Alert.AlertType.ERROR, "Failed to load the UserDetails dialog").show();
+        }
+
+        Scene scene = new Scene(parent, 900, 500);
+        Stage stage = new Stage();
+        stage.setResizable(false);
+        stage.initModality(Modality.APPLICATION_MODAL);
+        stage.setScene(scene);
+
+        UserDetailsController dialogController = fxmlLoader.getController();
+        dialogController.setLocalObservableList(usersObservableList);
+
+        // Updating the stage & classes with key details depending on why the dialog is being used
+        switch (userDetailsPurpose) {
+            case Add -> {
+                stage.setTitle("Add New User");
+                dialogController.setUserDetailsPurpose(UserDetailsPurpose.Add);
+            }
+            case Edit -> {
+                stage.setTitle("Edit Selected User");
+                dialogController.setUserDetailsPurpose(userDetailsPurpose.Edit);
+                dialogController.setSelectedUser((User) tableViewUsers.getSelectionModel().getSelectedItem());
+            }
+            default -> throw new IllegalArgumentException();
+        }
+
+        // The 'Wait' part in showAndWait means this method will wait here until the new stage is closed
+        stage.showAndWait();
+
+        if (userDetailsPurpose == userDetailsPurpose.Edit) {
+            tableViewUsers.refresh();   // Updates the TableView so it can show the latest version of an edited user
+            // While ObservableList does observe the elements in the list, it doesn't seem to observe the values of one changing, giving cause for this to be used.
+
+            // From the Java docs regarding the usage of the refresh method "This is useful in cases where the underlying data source has changed in a way that is not observed by the ListView itself"
+            // Source - https://docs.oracle.com/javase/9/docs/api/javafx/scene/control/ListView.html
+        }
+    }
+
+    @FXML
+    public void onLoadUsersClick() {
+        Banks.loadUserBank(true, true, usersObservableList);
+    }
+
+    @FXML
+    public void onSaveUsersClick() {
+        Banks.saveUserBank(true, true, usersObservableList);
+    }
+}

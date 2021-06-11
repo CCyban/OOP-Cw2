@@ -44,6 +44,11 @@
                    <fx:include fx:id="DoTest" source="../Tabs/DoTestManagement/DoTestManagement.fxml"/>
                </content>
             </Tab>
+             <Tab style="-fx-font-size: 18px;" text="User Management">
+                 <content>
+                     <fx:include fx:id="UserManagement" source="../Tabs/UserManagement/UserManagement.fxml"/>
+                 </content>
+             </Tab>
          </tabs>
       </TabPane>
       <Button fx:id="buttonLogout" mnemonicParsing="false" onAction="#onLogoutClick" text="Log out" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="TOP">

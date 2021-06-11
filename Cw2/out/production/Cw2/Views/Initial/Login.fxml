@@ -3,22 +3,25 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.Glow?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<GridPane prefHeight="450.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Initial.LoginController">
+<GridPane hgap="25.0" prefHeight="550.0" prefWidth="950.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controllers.Initial.LoginController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="503.0" minWidth="10.0" prefWidth="337.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="10.0" prefWidth="347.0" />
+      <ColumnConstraints hgrow="SOMETIMES" maxWidth="700.0" minWidth="10.0" prefWidth="230.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="206.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="132.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="330.0" minHeight="10.0" prefHeight="133.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="216.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="99.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="331.0" minHeight="10.0" prefHeight="83.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="330.0" minHeight="10.0" prefHeight="152.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
       <Label focusTraversable="false" text="Welcome" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.valignment="BOTTOM">
@@ -32,30 +35,30 @@
             <Insets />
          </GridPane.margin>
       </Label>
-      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" GridPane.rowIndex="1">
-         <children>
-            <Label focusTraversable="false" text="Account Number:">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <HBox.margin>
-                  <Insets right="20.0" />
-               </HBox.margin>
-            </Label>
-            <TextField fx:id="textFieldAccountNumber" onAction="#onEnter">
-               <font>
-                  <Font size="24.0" />
-               </font>
-            </TextField>
-            <Button fx:id="buttonSignIn" mnemonicParsing="false" onAction="#onClick" text="Sign In">
-               <font>
-                  <Font size="24.0" />
-               </font>
-               <HBox.margin>
-                  <Insets left="40.0" />
-               </HBox.margin>
-            </Button>
-         </children>
-      </HBox>
+      <Label focusTraversable="false" text="Username:" GridPane.halignment="RIGHT" GridPane.rowIndex="1">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="textFieldUsernameInput" onAction="#onEnter" GridPane.columnIndex="1" GridPane.rowIndex="1">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </TextField>
+      <Label focusTraversable="false" text="Password:" GridPane.halignment="RIGHT" GridPane.rowIndex="2">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <PasswordField fx:id="passwordFieldPasswordInput" onAction="#onEnter" GridPane.columnIndex="1" GridPane.rowIndex="2">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </PasswordField>
+      <Button fx:id="buttonSignIn" mnemonicParsing="false" onAction="#onClick" text="Sign In" GridPane.columnSpan="2147483647" GridPane.halignment="CENTER" GridPane.rowIndex="3">
+         <font>
+            <Font size="36.0" />
+         </font>
+      </Button>
    </children>
 </GridPane>

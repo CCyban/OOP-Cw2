@@ -1,9 +1,9 @@
 package Controllers.Initial;
 
-import Classes.Account.Student;
+import Classes.Account.User;
 import Classes.Banks;
-import Classes.Translating;
-import javafx.beans.property.SimpleBooleanProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,16 +15,15 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.Instant;
-import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
-import java.util.UUID;
 
 public class LoginController implements Initializable {
 
     @FXML
-    private TextField textFieldAccountNumber;
+    private TextField textFieldUsernameInput;
+
+    @FXML
+    private PasswordField passwordFieldPasswordInput;
 
     @FXML
     private Button buttonSignIn;
@@ -32,29 +31,21 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-
-        Banks.generateBanksIfNotFound();    // Simply generates all missing banks (as in questionBank, testBank, resultBank)
+        Banks.generateBanksIfNotFound();    // Simply generates all missing banks (as in questionBank, testBank, resultBank, userBank)
     }
 
     @FXML
     public void onEnter(ActionEvent event) {
-        SignIn(textFieldAccountNumber.getText());
+        SignIn(textFieldUsernameInput.getText(), passwordFieldPasswordInput.getText());
     }
 
     @FXML
     public void onClick(ActionEvent event) {
-
-
-        Student student = new Student("abc", "last", Date.from(Instant.now()));
-        System.out.println(student.getAccountType());
-
-
-
-        SignIn(textFieldAccountNumber.getText());
+        SignIn(textFieldUsernameInput.getText(), passwordFieldPasswordInput.getText());
     }
 
-    public void SignIn(String accountNumber) {
-        if (isSignInSuccessful(accountNumber)) {
+    public void SignIn(String usernameInput, String passwordInput) {
+        if (isSignInSuccessful(usernameInput, passwordInput)) {
             Dialog<ButtonType> alertSignIn = new Alert(Alert.AlertType.INFORMATION);
             alertSignIn.setTitle("Sign In Attempt");
             alertSignIn.setHeaderText("Sign In Attempt Successful");
@@ -70,13 +61,27 @@ public class LoginController implements Initializable {
             alertSignIn.setHeaderText("Sign In Attempt Failed");
             alertSignIn.showAndWait();
 
-            textFieldAccountNumber.requestFocus();
+            textFieldUsernameInput.requestFocus();
         }
 
     }
 
-    public Boolean isSignInSuccessful(String accountNumber) {
-        return true;    // Always return true for now, until Cw2.
+    public Boolean isSignInSuccessful(String usernameInput, String passwordInput) {
+
+        ObservableList<User> usersObservableList = FXCollections.observableArrayList();
+        Banks.loadUserBank(false, true, usersObservableList);
+
+        User someUser = (usersObservableList.stream()
+                .filter(user -> usernameInput.equals((user).getUsername()))
+                .findFirst()
+                .orElse(null));
+
+        if (someUser != null) { // If the username already exists, check if the password is correct
+            if (someUser.getPassword().equals(passwordInput)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void updateStageOnSuccessfulSignIn() {
