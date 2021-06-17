@@ -77,7 +77,7 @@ public class Banks {
     }
 
     public static void loadUserBank(Boolean useDialogOnSuccess, Boolean useDialogOnFailure, ObservableList observableListToLoadInto) {
-        // Running an attempt to retrieve the data from the questionBank
+        // Running an attempt to retrieve the data from the userBank
         List retrievedData = Translating.deserialiseList("userBank.ser", useDialogOnSuccess, useDialogOnFailure);
         if (retrievedData != null) {    // If successful then replace the currently used data with the loaded data
             observableListToLoadInto.clear();
@@ -86,8 +86,22 @@ public class Banks {
     }
 
     public static void saveUserBank(Boolean useDialogOnSuccess, Boolean useDialogOnFailure, ObservableList observableListToSave) {
-        // Sending the data from the ObservableList to be serialised as a testBank file
+        // Sending the data from the ObservableList to be serialised as a userBank file
         Translating.serialiseObject(observableListToSave.stream().toList() ,"userBank.ser", useDialogOnSuccess, useDialogOnFailure);
+    }
+
+    public static void loadClassBank(Boolean useDialogOnSuccess, Boolean useDialogOnFailure, ObservableList observableListToLoadInto) {
+        // Running an attempt to retrieve the data from the classBank
+        List retrievedData = Translating.deserialiseList("classBank.ser", useDialogOnSuccess, useDialogOnFailure);
+        if (retrievedData != null) {    // If successful then replace the currently used data with the loaded data
+            observableListToLoadInto.clear();
+            observableListToLoadInto.addAll(retrievedData);
+        }
+    }
+
+    public static void saveClassBank(Boolean useDialogOnSuccess, Boolean useDialogOnFailure, ObservableList observableListToSave) {
+        // Sending the data from the ObservableList to be serialised as a classBank file
+        Translating.serialiseObject(observableListToSave.stream().toList() ,"classBank.ser", useDialogOnSuccess, useDialogOnFailure);
     }
 
     public static void generateBanksIfNotFound() {
@@ -103,9 +117,13 @@ public class Banks {
         {
             saveResultBank(false, false, FXCollections.observableArrayList());     // Creates empty resultBank
         }
-        if (Translating.deserialiseList("userBank.ser", false, false) == null)  // If there is no resultBank.ser
+        if (Translating.deserialiseList("userBank.ser", false, false) == null)  // If there is no userBank.ser
         {
             saveUserBank(false, false, FXCollections.observableArrayList());     // Creates empty userBank
+        }
+        if (Translating.deserialiseList("classBank.ser", false, false) == null)  // If there is no classBank.ser
+        {
+            saveClassBank(false, false, FXCollections.observableArrayList());     // Creates empty classBank
         }
     }
 }

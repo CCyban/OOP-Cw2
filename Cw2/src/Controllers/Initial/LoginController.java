@@ -51,7 +51,6 @@ public class LoginController implements Initializable {
             alertSignIn.setHeaderText("Sign In Attempt Successful");
             alertSignIn.showAndWait();
 
-
             updateStageOnSuccessfulSignIn();
         }
         else
