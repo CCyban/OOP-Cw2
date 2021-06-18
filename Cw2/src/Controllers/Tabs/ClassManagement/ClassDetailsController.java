@@ -32,10 +32,10 @@ public class ClassDetailsController implements Initializable {
     private TextField textFieldSubjectInput;
 
     @FXML
-    private TableView tableViewUserBank;
+    private TableView<User> tableViewUserBank;
 
     @FXML
-    private TableView tableViewClassUsers;
+    private TableView<User> tableViewClassUsers;
 
     private ObservableList<Class> classesObservableList;
     private ClassManagementController.ClassDetailsPurpose classDetailsPurpose;
@@ -76,81 +76,11 @@ public class ClassDetailsController implements Initializable {
 
         // The Gathering is complete
 
-
-        // TODO: Make the class-specific validation
-        /*
-        // If a new user is being made OR if a username has been changed
-        if (userDetailsPurpose == ClassManagementController.UserDetailsPurpose.Add || usernameInput != selectedUser.getUsername()) {
-            ObservableList<User> usersObservableList = FXCollections.observableArrayList();
-            Banks.loadUserBank(false, true, usersObservableList);
-
-
-            User someUser = (usersObservableList.stream()
-                    .filter(user -> usernameInput.equals((user).getUsername()))
-                    .findFirst()
-                    .orElse(null));
-
-            if (someUser != null) { // If the username already exists, alert the user that they cannot use the username
-                new Alert(Alert.AlertType.INFORMATION, "The username is already in use. Please use a different one.").show();
-                return;
-            }
-        }
-
-         */
-
-        // TODO: Validation for inputs
-        // Question-type specific validation, am using switch statement here so new cases can easily be added whilst maintaining efficiency
-        /*
-        switch (accountTypeInput) {
-            case MultiChoice:
-                // Storing a local copy of the question string as it will be modified
-                String entireQuestion = questionInput;
-
-                if (!entireQuestion.contains("(") || !entireQuestion.contains(")")) {   //
-                    new Alert(Alert.AlertType.INFORMATION, "The question needs to contain options.\nLook at the help text below the question text box for an example.").show();
-                    return;
-                }
-
-                // Find the split of the subsections & remove the brackets to clean it up
-                int optionsIndex = entireQuestion.indexOf('(');                     // Finds where initial question ends & the options begin
-                entireQuestion = entireQuestion.replace("(", "");   // Removes the '('
-                entireQuestion = entireQuestion.replace(")", "");   // Removes the ')'
-
-                if (entireQuestion.length() + 2 != questionInput.length()) { // If the question contains more brackets than just a single pair, alert user to do it properly
-                    new Alert(Alert.AlertType.ERROR, "The question contains more brackets than just a single pair for options.").show();
-                    return;
-                }
-
-                // Get the 'options' subsection
-                String questionOptionsString = entireQuestion.substring(optionsIndex);    // Splits the entireQuestion into the question options part
-                List questionOptionsList = Arrays.asList(questionOptionsString.split("\\s*,\\s*"));
-
-                if (questionOptionsList.size() > 4 ) { // If the question contains at least 1 option
-                    new Alert(Alert.AlertType.ERROR, "There needs to be no more than 4 options in the question.").show();
-                    return;
-                }
-
-                if (questionOptionsList.size() == 1 && questionOptionsList.get(0).equals("")) {
-                    new Alert(Alert.AlertType.ERROR, "There needs to at least 1 option in the question.").show();
-                    return;
-                }
-
-
-                if (!questionOptionsList.contains(answerInput)) {
-                    new Alert(Alert.AlertType.INFORMATION, "One of the question options needs to be the answer").show();
-                    return;
-                }
-                break;
-            default: break; // It's okay if a question-type doesn't need any further validation than the general validation
-        }
-
-         */
-
-        // Generate the user in text-form in preparation to show to the user for confirmation
-        //String contentText = getContentText(firstNameInput, lastNameInput, usernameInput, passwordInput);
+        // Generate the class in text-form in preparation to show to the user for confirmation
+        String contentText = getContentText(yearGroupInput, subjectInput, classUsersObservableList.size());
 
         // Do the assigned action with confirmation dialogs
-        //doActionWithConfirmation(firstNameInput, lastNameInput, usernameInput, passwordInput, contentText);
+        doActionWithConfirmation(yearGroupInput, subjectInput, contentText);
 
         // Closes this dialog now that the action has been finished with
         ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
@@ -181,13 +111,11 @@ public class ClassDetailsController implements Initializable {
 
         this.classUsersObservableList = FXCollections.observableArrayList(selectedClass.getUsers());
 
-        /*  // TODO: map the data
-        textFieldFirstNameInput.setText(_selectedUser.getFirstName());
-        textFieldLastNameInput.setText(_selectedUser.getLastName());
-        textFieldUsernameInput.setText(_selectedUser.getUsername());
-        textFieldPasswordInput.setText(_selectedUser.getPassword());
+        textFieldYearGroupInput.setText(_selectedClass.getYearGroup());
+        textFieldSubjectInput.setText(_selectedClass.getSubject());
 
-         */
+        this.classUsersObservableList = FXCollections.observableArrayList(selectedClass.getUsers());
+        tableViewClassUsers.setItems(classUsersObservableList);
     }
 
     public void showIncompleteFormError() {
@@ -198,31 +126,17 @@ public class ClassDetailsController implements Initializable {
         // TODO: Maybe?
     }
 
-    public String getContentText(AccountType accountTypeInput, String firstNameInput, String lastNameInput, String usernameInput, String passwordInput, LocalDate dateOfBirthInput) {
-        String contentText;
-
-        switch (accountTypeInput) {
-            case Student -> contentText =
-                    "Account Type: : " + accountTypeInput +
-                            "\nFirst Name: " + firstNameInput +
-                            "\nLast Name: " + lastNameInput +
-                            "\nUsername: " + usernameInput +
-                            "\nPassword: " + passwordInput +
-                            "\nDate of Birth: " + dateOfBirthInput;
-            case Teacher, SysAdmin -> contentText =
-                    "Account Type: : " + accountTypeInput +
-                            "\nFirst Name: " + firstNameInput +
-                            "\nLast Name: " + lastNameInput +
-                            "\nUsername: " + usernameInput +
-                            "\nPassword: " + passwordInput;
-            default -> throw new IllegalArgumentException();
-        }
+    public String getContentText(String yearGroupInput, String subjectInput, int usersCount) {
+        String contentText =
+                "Year Group: " + yearGroupInput +
+                        "\nSubject: " + subjectInput +
+                        "\nAmount of users in Class: " + usersCount;
         return contentText;
     }
 
     // 'Action' meaning the value in the userDetailsPurpose enum
-    public void doActionWithConfirmation(AccountType accountTypeInput, String firstNameInput, String lastNameInput, String usernameInput, String passwordInput, LocalDate dateOfBirthInput, String contentText) {
-        /*
+    public void doActionWithConfirmation(String yearGroupInput, String subjectInput, String contentText) {
+
         // Ask user if they are sure of their inputs
         Dialog<ButtonType> confirmationDialog = new Alert(Alert.AlertType.CONFIRMATION);
         confirmationDialog.setTitle("Confirmation");
@@ -234,68 +148,37 @@ public class ClassDetailsController implements Initializable {
             case Add -> confirmationDialog.showAndWait().ifPresent(confirmationResponse -> {
                 if (confirmationResponse == ButtonType.OK) {    // If the user said they are OK with their inputs
 
-                    switch (accountTypeInput) {
-                        case Student -> {
-                            // Load the gathered inputs into the constructor
-                            Student newStudent = new Student(firstNameInput, lastNameInput, usernameInput, passwordInput, dateOfBirthInput);
-                            // Add the new constructed Student to the list
-                            classesObservableList.add(newStudent);
-                        }
-                        case Teacher -> {
-                            // Load the gathered inputs into the constructor
-                            Teacher newTeacher = new Teacher(firstNameInput, lastNameInput, usernameInput, passwordInput);
-                            // Add the new constructed Teacher to the list
-                            classesObservableList.add(newTeacher);
-                        }
-                        case SysAdmin -> {
-                            // Load the gathered inputs into the constructor
-                            SysAdmin newSysAdmin = new SysAdmin(firstNameInput, lastNameInput, usernameInput, passwordInput);
-                            // Add the new constructed SysAdmin to the list
-                            classesObservableList.add(newSysAdmin);
-                        }
-                    }
+                    selectedClass.setYearGroup(yearGroupInput);
+                    selectedClass.setSubject(subjectInput);
 
-                    new Alert(Alert.AlertType.CONFIRMATION, "The user is added to the user bank. Save the user bank now?").showAndWait().ifPresent(saveResponse -> {
+                    new Alert(Alert.AlertType.CONFIRMATION, "The class is added to the class bank. Save the class bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveUserBank(true, true, classesObservableList);
+                            Banks.saveClassBank(true, true, classesObservableList);
                         }
                     });
                 } else {
-                    new Alert(Alert.AlertType.INFORMATION, "The user was not added.").show();
+                    new Alert(Alert.AlertType.INFORMATION, "The class was not added.").show();
                 }
             });
             case Edit -> confirmationDialog.showAndWait().ifPresent(confirmationResponse -> {
                 if (confirmationResponse == ButtonType.OK) {    // If the user said they are OK with their inputs
 
-                    switch (accountTypeInput) {
-                        case Student -> {
-                            // Update the user data with the newly edited values
-                            selectedClass.setFirstName(firstNameInput);
-                            selectedClass.setLastName(lastNameInput);
-                            if (selectedClass.getAccountType() == AccountType.Student) {
-                                ((Student) selectedClass).setDateOfBirth(dateOfBirthInput);
-                            }
-                        }
-                        case Teacher, SysAdmin -> {
-                            // Update the user data with the newly edited values
-                            selectedClass.setFirstName(firstNameInput);
-                            selectedClass.setLastName(lastNameInput);
-                        }
-                    }
+                    selectedClass.setYearGroup(yearGroupInput);
+                    selectedClass.setSubject(subjectInput);
 
-                    new Alert(Alert.AlertType.CONFIRMATION, "The user is edited. Save the user bank now?").showAndWait().ifPresent(saveResponse -> {
+                    new Alert(Alert.AlertType.CONFIRMATION, "The class is edited. Save the class bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveUserBank(true, true, classesObservableList);
+                            Banks.saveClassBank(true, true, classesObservableList);
                         }
                     });
                 } else {
-                    new Alert(Alert.AlertType.INFORMATION, "The user was not edited.").show();
+                    new Alert(Alert.AlertType.INFORMATION, "The class was not edited.").show();
                 }
             });
             default -> throw new IllegalArgumentException();
         }
 
-         */
+
     }
 
     @FXML
@@ -306,11 +189,22 @@ public class ClassDetailsController implements Initializable {
             return;
         }
 
+        // If a user is already added then the action should not proceed
+        if (tableViewClassUsers.getItems().stream()
+                .filter(user -> tableViewUserBank.getSelectionModel().getSelectedItem().getUserUUID().equals((user).getUserUUID()))
+                .findFirst()
+                .orElse(null) != null) {
+
+            new Alert(Alert.AlertType.ERROR, "User is already added").show();
+            return;
+        }
+
         // Adds the user to the class
         selectedClass.addUser(((User) tableViewUserBank.getSelectionModel().getSelectedItem()).getUserUUID());
         // Refreshes data/table
         classUsersObservableList = FXCollections.observableArrayList(selectedClass.getUsers());
         tableViewClassUsers.setItems(classUsersObservableList);
+
     }
 
     @FXML
