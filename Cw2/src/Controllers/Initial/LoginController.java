@@ -2,6 +2,7 @@ package Controllers.Initial;
 
 import Classes.Account.User;
 import Classes.Banks;
+import Controllers.Tabs.TestManagement.TestDetailsController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -45,18 +46,19 @@ public class LoginController implements Initializable {
     }
 
     public void SignIn(String usernameInput, String passwordInput) {
-        if (isSignInSuccessful(usernameInput, passwordInput)) {
-            Dialog<ButtonType> alertSignIn = new Alert(Alert.AlertType.INFORMATION);
-            alertSignIn.setTitle("Sign In Attempt");
+        User currentUser = getUser(usernameInput, passwordInput);
+
+        Dialog<ButtonType> alertSignIn = new Alert(Alert.AlertType.INFORMATION);
+        alertSignIn.setTitle("Sign In Attempt");
+
+        if (currentUser != null) {
             alertSignIn.setHeaderText("Sign In Attempt Successful");
             alertSignIn.showAndWait();
 
-            updateStageOnSuccessfulSignIn();
+            updateStageOnSuccessfulSignIn(currentUser);
         }
         else
         {
-            Dialog<ButtonType> alertSignIn = new Alert(Alert.AlertType.INFORMATION);
-            alertSignIn.setTitle("Sign In Attempt");
             alertSignIn.setHeaderText("Sign In Attempt Failed");
             alertSignIn.showAndWait();
 
@@ -65,7 +67,7 @@ public class LoginController implements Initializable {
 
     }
 
-    public Boolean isSignInSuccessful(String usernameInput, String passwordInput) {
+    public User getUser(String usernameInput, String passwordInput) {
 
         ObservableList<User> usersObservableList = FXCollections.observableArrayList();
         Banks.loadUserBank(false, true, usersObservableList);
@@ -75,20 +77,25 @@ public class LoginController implements Initializable {
                 .findFirst()
                 .orElse(null));
 
-        if (someUser != null) { // If the username already exists, check if the password is correct
+        if (someUser != null) { // If the username exists, check if the password is correct
             if (someUser.getPassword().equals(passwordInput)) {
-                return true;
+                return someUser;
             }
         }
-        return false;
+        return null;
     }
 
-    public void updateStageOnSuccessfulSignIn() {
+    public void updateStageOnSuccessfulSignIn(User currentUser) {
         Stage stage = (Stage) buttonSignIn.getScene().getWindow();
         try {
-            Parent root = FXMLLoader.load(getClass().getResource("/Views/Initial/Tabs.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/Initial/Tabs.fxml"));
+            Parent root = fxmlLoader.load();
             stage.setScene(new Scene(root, 1000, 600));
-        } catch (IOException e) {
+
+            TabsController tabsController = fxmlLoader.getController();
+            tabsController.setCurrentUser(currentUser);
+        }
+        catch (IOException e) {
             new Alert(Alert.AlertType.ERROR, "Failed to load the tabs").show();
         }
     }

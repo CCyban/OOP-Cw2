@@ -2,12 +2,8 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
@@ -22,36 +18,36 @@
       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
   </rowConstraints>
    <children>
-      <TabPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="28.0">
+      <TabPane fx:id="tabsPaneMain" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1000.0" style="-fx-open-tab-animation: NONE; -fx-close-tab-animation: NONE;" tabClosingPolicy="UNAVAILABLE" tabMaxHeight="28.0">
          <tabs>
-            <Tab style="-fx-font-size: 18px;" text="Question Management">
+            <Tab fx:id="tabQuestionManagement" style="-fx-font-size: 18px;" text="Question Management">
                <content>
-                   <fx:include fx:id="QuestionManagement" source="../Tabs/QuestionManagement/QuestionManagement.fxml"/>
+                   <fx:include fx:id="QuestionManagement" source="../Tabs/QuestionManagement/QuestionManagement.fxml" />
                </content>
             </Tab>
-            <Tab style="-fx-font-size: 18px;" text="Test Management">
+            <Tab fx:id="tabTestManagement" style="-fx-font-size: 18px;" text="Test Management">
                <content>
-                   <fx:include fx:id="TestManagement" source="../Tabs/TestManagement/TestManagement.fxml"/>
+                   <fx:include fx:id="TestManagement" source="../Tabs/TestManagement/TestManagement.fxml" />
                </content>
             </Tab>
-            <Tab style="-fx-font-size: 18px;" text="View Test Results">
+            <Tab fx:id="tabViewTestResults" style="-fx-font-size: 18px;" text="View Test Results">
                <content>
-                   <fx:include fx:id="ViewTestResults" source="../Tabs/DoTestManagement/ViewTestResultsManagement.fxml"/>
+                   <fx:include fx:id="ViewTestResults" source="../Tabs/DoTestManagement/ViewTestResultsManagement.fxml" />
                </content>
             </Tab>
-            <Tab style="-fx-font-size: 18px;" text="Do a Test">
+            <Tab fx:id="tabDoATest" style="-fx-font-size: 18px;" text="Do a Test">
                <content>
-                   <fx:include fx:id="DoTest" source="../Tabs/DoTestManagement/DoTestManagement.fxml"/>
+                   <fx:include fx:id="DoTest" source="../Tabs/DoTestManagement/DoTestManagement.fxml" />
                </content>
             </Tab>
-             <Tab style="-fx-font-size: 18px;" text="User Management">
+             <Tab fx:id="tabUserManagement" style="-fx-font-size: 18px;" text="User Management">
                  <content>
-                     <fx:include fx:id="UserManagement" source="../Tabs/UserManagement/UserManagement.fxml"/>
+                     <fx:include fx:id="UserManagement" source="../Tabs/UserManagement/UserManagement.fxml" />
                  </content>
              </Tab>
-             <Tab style="-fx-font-size: 18px;" text="Class Management">
+             <Tab fx:id="tabClassManagement" style="-fx-font-size: 18px;" text="Class Management">
                  <content>
-                     <fx:include fx:id="ClassManagement" source="../Tabs/ClassManagement/ClassManagement.fxml"/>
+                     <fx:include fx:id="ClassManagement" source="../Tabs/ClassManagement/ClassManagement.fxml" />
                  </content>
              </Tab>
          </tabs>
