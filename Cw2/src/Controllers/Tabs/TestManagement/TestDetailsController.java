@@ -190,6 +190,12 @@ public class TestDetailsController implements Initializable {
 
     @FXML
     public void onAddToTestClick(ActionEvent event) {
+        // If a question is not selected then the action cannot proceed
+        if (tableViewQuestionBank.getSelectionModel().getSelectedItem() == null) {
+            new Alert(Alert.AlertType.ERROR, "No question is selected with your action").show();
+            return;
+        }
+
         // Adds the question to the test
         selectedTest.addQuestion(((Question) tableViewQuestionBank.getSelectionModel().getSelectedItem()).getQuestionUUID());
         // Refreshes data/table

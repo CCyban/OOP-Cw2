@@ -1,6 +1,12 @@
 package Classes;
 
+import Classes.Account.User;
+import Classes.Quiz.Question;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class Class implements java.io.Serializable{
@@ -9,18 +15,20 @@ public class Class implements java.io.Serializable{
 
     private String yearGroup;
     private String Subject;
-    private ArrayList<UUID> assignedTeachers;
-    private ArrayList<UUID> assignedStudents;
+    private ArrayList<UUID> userUUIDs;
 
-    public Class(String _yearGroup, String _Subject, ArrayList<UUID> _assignedTeachers, ArrayList<UUID> _assignedStudents) {
+    public Class(String _yearGroup, String _Subject, ArrayList<UUID> _userUUIDs) {
         // Generate a UUID for the class
         this.classUUID = UUID.randomUUID();
 
         // Use payload values
         this.yearGroup = _yearGroup;
         this.Subject = _Subject;
-        this.assignedTeachers = _assignedTeachers;
-        this.assignedStudents = _assignedStudents;
+        this.userUUIDs = _userUUIDs;
+    }
+
+    public UUID getClassUUID() {
+        return classUUID;
     }
 
     public String getYearGroup() {
@@ -39,19 +47,33 @@ public class Class implements java.io.Serializable{
         Subject = _subject;
     }
 
-    public ArrayList<UUID> getAssignedTeachers() {
-        return assignedTeachers;
+    public ArrayList<UUID> getUserUUIDs() {
+        return userUUIDs;
     }
 
-    public void setAssignedTeachers(ArrayList<UUID> _assignedTeachers) {
-        this.assignedTeachers = _assignedTeachers;
+    public List<User> getUsers() {
+        ObservableList<User> classUsersObservableList = FXCollections.observableArrayList();
+
+        ObservableList<User> userBankObservableList = FXCollections.observableArrayList();
+        Banks.loadUserBank(false, true, userBankObservableList);
+
+        for (UUID userUUID: userUUIDs) {
+
+            User currentUser = userBankObservableList.stream()
+                    .filter(user -> userUUID.equals((user).getUserUUID()))
+                    .findFirst()
+                    .orElse(null);
+
+            classUsersObservableList.add(currentUser);
+        }
+        return classUsersObservableList;
     }
 
-    public ArrayList<UUID> getAssignedStudents() {
-        return assignedStudents;
+    public void addUser(UUID userUUID) {
+        userUUIDs.add(userUUID);
     }
 
-    public void setAssignedStudents(ArrayList<UUID> _assignedStudents) {
-        this.assignedStudents = _assignedStudents;
+    public void removeUser(UUID userUUID) {
+        userUUIDs.remove(userUUID);
     }
 }

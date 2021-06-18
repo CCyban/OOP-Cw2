@@ -3,6 +3,7 @@ package Controllers.Tabs.ClassManagement;
 import Classes.Account.User;
 import Classes.Banks;
 import Classes.Class;
+import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -21,6 +22,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -60,20 +62,17 @@ public class ClassManagementController implements Initializable {
     public void initTableViewClasses() {
         // Set the TableColumns up for the TableView
         TableColumn idCol = new TableColumn("Class Id");
-        idCol.setCellValueFactory(new PropertyValueFactory<User, UUID>("classUUID"));
+        idCol.setCellValueFactory(new PropertyValueFactory<Class, UUID>("classUUID"));
         idCol.setPrefWidth(100);
 
         TableColumn yearCol = new TableColumn("Year Group");
-        yearCol.setCellValueFactory(new PropertyValueFactory<User, String>("yearGroup"));
+        yearCol.setCellValueFactory(new PropertyValueFactory<Class, String>("yearGroup"));
 
         TableColumn subjectCol = new TableColumn("Subject");
-        subjectCol.setCellValueFactory(new PropertyValueFactory<User, String>("Subject"));
-
-        TableColumn teachersCol = new TableColumn("Teachers");
-        teachersCol.setCellValueFactory(new PropertyValueFactory<User, Enums.AccountType>("teachersList"));
+        subjectCol.setCellValueFactory(new PropertyValueFactory<Class, String>("Subject"));
 
         // Add the constructed columns to the TableView
-        tableViewClasses.getColumns().addAll(idCol, yearCol, subjectCol, teachersCol);
+        tableViewClasses.getColumns().addAll(idCol, yearCol, subjectCol);
 
         // Hook up the observable list with the TableView
         tableViewClasses.setItems(classesObservableList);
@@ -144,7 +143,7 @@ public class ClassManagementController implements Initializable {
             new Alert(Alert.AlertType.ERROR, "Failed to load the ClassDetails dialog").show();
         }
 
-        Scene scene = new Scene(parent, 900, 500);
+        Scene scene = new Scene(parent, 1200, 700);
         Stage stage = new Stage();
         stage.setResizable(false);
         stage.initModality(Modality.APPLICATION_MODAL);
@@ -158,24 +157,33 @@ public class ClassManagementController implements Initializable {
             case Add -> {
                 stage.setTitle("Add New Class");
                 dialogController.setClassDetailsPurpose(ClassDetailsPurpose.Add);
+                Class newClass = new Class("", "", new ArrayList<>());
+                classesObservableList.add(newClass);
+                dialogController.setSelectedClass(newClass);
+
+                // The 'Wait' part in showAndWait means this method will wait here until the new stage is closed
+                stage.showAndWait();
+
+                // If the user didn't finish adding the class, remove it
+                if (newClass.getYearGroup().equals("")) {
+                    classesObservableList.remove(newClass);
+                }
             }
             case Edit -> {
                 stage.setTitle("Edit Selected Class");
                 dialogController.setClassDetailsPurpose(classDetailsPurpose.Edit);
                 dialogController.setSelectedClass((Class) tableViewClasses.getSelectionModel().getSelectedItem());
+
+                // The 'Wait' part in showAndWait means this method will wait here until the new stage is closed
+                stage.showAndWait();
+
+                tableViewClasses.refresh();   // Updates the TableView so it can show the latest version of an edited user
+                // While ObservableList does observe the elements in the list, it doesn't seem to observe the values of one changing, giving cause for this to be used.
+
+                // From the Java docs regarding the usage of the refresh method "This is useful in cases where the underlying data source has changed in a way that is not observed by the ListView itself"
+                // Source - https://docs.oracle.com/javase/9/docs/api/javafx/scene/control/ListView.html
             }
             default -> throw new IllegalArgumentException();
-        }
-
-        // The 'Wait' part in showAndWait means this method will wait here until the new stage is closed
-        stage.showAndWait();
-
-        if (classDetailsPurpose == classDetailsPurpose.Edit) {
-            tableViewClasses.refresh();   // Updates the TableView so it can show the latest version of an edited user
-            // While ObservableList does observe the elements in the list, it doesn't seem to observe the values of one changing, giving cause for this to be used.
-
-            // From the Java docs regarding the usage of the refresh method "This is useful in cases where the underlying data source has changed in a way that is not observed by the ListView itself"
-            // Source - https://docs.oracle.com/javase/9/docs/api/javafx/scene/control/ListView.html
         }
     }
 
