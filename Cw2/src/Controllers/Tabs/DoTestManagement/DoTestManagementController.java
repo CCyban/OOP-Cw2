@@ -1,6 +1,7 @@
 package Controllers.Tabs.DoTestManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -45,7 +46,8 @@ public class DoTestManagementController implements Initializable {
         });
 
         // Load (if any) stored questions into a ObservableList
-        Banks.loadTestBank(false, true, testsObservableList);
+        testsObservableList.clear();
+        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewTests();
@@ -119,7 +121,8 @@ public class DoTestManagementController implements Initializable {
 
     @FXML
     public void onLoadLatestTestsClick() {
-        Banks.loadTestBank(true, true, testsObservableList);
+        testsObservableList.clear();
+        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
     }
 
 }

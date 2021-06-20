@@ -1,6 +1,7 @@
 package Controllers.Tabs.DoTestManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.RegexTextFormatters;
 import Classes.Quiz.Answer;
 import Classes.Quiz.Question;
@@ -103,11 +104,11 @@ public class DoTestDetailsController implements Initializable {
 
         switch (doTestDetailsPurpose) {
             case Add:
-                Banks.updateResultBank(true, true, true, new Result(selectedTest.getTestUUID(), arrayListAnswers));
+                DataPersistence.updateResultBank(true, new Result(selectedTest.getTestUUID(), arrayListAnswers));
                 break;
             case Edit:
                 selectedResult.setResultData(arrayListAnswers);
-                Banks.updateResultBank(true, true, false, selectedResult);
+                DataPersistence.updateResultBank(false, selectedResult);
                 break;
             default:
                 throw new IllegalArgumentException();

@@ -5,6 +5,7 @@ import Classes.Account.SysAdmin;
 import Classes.Account.Teacher;
 import Classes.Account.User;
 import Classes.Banks;
+import Classes.DataPersistence;
 import Enums.AccountType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -111,8 +112,7 @@ public class UserDetailsController implements Initializable {
         // If a new user is being made OR if a username has been changed
         if (userDetailsPurpose == UserManagementController.UserDetailsPurpose.Add || usernameInput != selectedUser.getUsername()) {
             ObservableList<User> usersObservableList = FXCollections.observableArrayList();
-            Banks.loadUserBank(false, true, usersObservableList);
-
+            usersObservableList.addAll(DataPersistence.loadBank("userBank"));
 
             User someUser = (usersObservableList.stream()
                     .filter(user -> usernameInput.equals((user).getUsername()))
@@ -329,7 +329,7 @@ public class UserDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The user is added to the user bank. Save the user bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveUserBank(true, true, usersObservableList);
+                            DataPersistence.saveBank("userBank", usersObservableList.stream().toList());
                         }
                     });
                 } else {
@@ -357,7 +357,7 @@ public class UserDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The user is edited. Save the user bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveUserBank(true, true, usersObservableList);
+                            DataPersistence.saveBank("userBank", usersObservableList.stream().toList());
                         }
                     });
                 } else {

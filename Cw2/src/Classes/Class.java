@@ -55,7 +55,7 @@ public class Class implements java.io.Serializable{
         ObservableList<User> classUsersObservableList = FXCollections.observableArrayList();
 
         ObservableList<User> userBankObservableList = FXCollections.observableArrayList();
-        Banks.loadUserBank(false, true, userBankObservableList);
+        userBankObservableList.addAll(DataPersistence.loadBank("userBank"));
 
         for (UUID userUUID: userUUIDs) {
 

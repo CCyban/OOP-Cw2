@@ -1,6 +1,7 @@
 package Controllers.Tabs.QuestionManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.Quiz.Question;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
@@ -47,8 +48,9 @@ public class QuestionManagementController implements Initializable {
 
         });
 
-        // Load (if any) stored questions into a ObservableList
-        Banks.loadQuestionBank(false, true, questionsObservableList);
+        // Load (if any) stored questions into an ObservableList
+        questionsObservableList.clear();
+        questionsObservableList.addAll(DataPersistence.loadBank("questionBank"));
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewQuestions();
@@ -108,7 +110,7 @@ public class QuestionManagementController implements Initializable {
 
         // If the question has a test dependency, do not allow deletion
         ObservableList<Test> testBank = FXCollections.observableArrayList();
-        Banks.loadTestBank(false, true, testBank);
+        testBank.addAll(DataPersistence.loadBank("testBank"));
 
         Question selectedQuestion = ((Question) tableViewQuestions.getSelectionModel().getSelectedItem());
 
@@ -191,11 +193,12 @@ public class QuestionManagementController implements Initializable {
 
     @FXML
     public void onLoadQuestionsClick() {
-        Banks.loadQuestionBank(true, true, questionsObservableList);
+        questionsObservableList.clear();
+        questionsObservableList.addAll(DataPersistence.loadBank("questionBank"));
     }
 
     @FXML
     public void onSaveQuestionsClick() {
-        Banks.saveQuestionBank(true, true, questionsObservableList);
+        DataPersistence.saveBank("questionBank", questionsObservableList.stream().toList());
     }
 }

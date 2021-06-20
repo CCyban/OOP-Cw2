@@ -1,6 +1,7 @@
 package Controllers.Tabs.TestManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.Quiz.Question;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
@@ -73,7 +74,8 @@ public class TestDetailsController implements Initializable {
 
 
         // Loads (if any) stored questions into a ObservableList
-        Banks.loadQuestionBank(false, true, questionBankObservableList);
+        questionBankObservableList.clear();
+        questionBankObservableList.addAll(DataPersistence.loadBank("questionBank"));
 
         initQuestionBankTableView();
         initTestQuestionsTableView();
@@ -248,7 +250,7 @@ public class TestDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The test is added to the test bank. Save the test bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveTestBank(true, true, testObservableList);
+                            DataPersistence.saveBank("testBank", testObservableList.stream().toList());
                         }
                     });
                 } else {
@@ -262,7 +264,7 @@ public class TestDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The test is edited. Save the test bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveTestBank(true, true, testObservableList);
+                            DataPersistence.saveBank("testBank", testObservableList.stream().toList());
                         }
                     });
                 } else {

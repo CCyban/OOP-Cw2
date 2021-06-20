@@ -3,6 +3,7 @@ package Controllers.Tabs.ClassManagement;
 import Classes.Account.User;
 import Classes.Banks;
 import Classes.Class;
+import Classes.DataPersistence;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -53,7 +54,8 @@ public class ClassManagementController implements Initializable {
         });
 
         // Load all stored classes into an ObservableList
-        Banks.loadClassBank(false, true, classesObservableList);
+        classesObservableList.clear();
+        classesObservableList.addAll(DataPersistence.loadBank("classBank"));
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewClasses();
@@ -189,11 +191,12 @@ public class ClassManagementController implements Initializable {
 
     @FXML
     public void onLoadClassesClick() {
-        Banks.loadClassBank(true, true, classesObservableList);
+        classesObservableList.clear();
+        classesObservableList.addAll(DataPersistence.loadBank("classBank"));
     }
 
     @FXML
     public void onSaveClassesClick() {
-        Banks.saveClassBank(true, true, classesObservableList);
+        DataPersistence.saveBank("classBank", classesObservableList.stream().toList());
     }
 }

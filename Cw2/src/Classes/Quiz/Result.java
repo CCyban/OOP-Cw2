@@ -1,6 +1,7 @@
 package Classes.Quiz;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class Result implements java.io.Serializable {
 
     public String getTestTitle() {
         ObservableList<Test> testBankObservableList = FXCollections.observableArrayList();
-        Banks.loadTestBank(false, true, testBankObservableList);
+        testBankObservableList.addAll(DataPersistence.loadBank("testBank"));
 
         String testTitle = (testBankObservableList.stream()
                 .filter(test -> testUUID.equals((test).getTestUUID()))

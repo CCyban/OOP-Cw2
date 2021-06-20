@@ -2,7 +2,7 @@ package Controllers.Initial;
 
 import Classes.Account.User;
 import Classes.Banks;
-import Controllers.Tabs.TestManagement.TestDetailsController;
+import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -16,6 +16,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class LoginController implements Initializable {
@@ -32,7 +33,15 @@ public class LoginController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        Banks.generateBanksIfNotFound();    // Simply generates all missing banks (as in questionBank, testBank, resultBank, userBank)
+        //List test = DataPersistence.loadBank("questionBank");
+
+/*
+        ObservableList obl = FXCollections.observableArrayList();
+        Banks.loadQuestionBank(false, false, obl);
+        DataPersistence.saveBank("questionBank", obl.stream().toList());
+ */
+
+        DataPersistence.defaultDataIfNoAdminExists(); // Simply generates a default admin if one doesn't exist
     }
 
     @FXML
@@ -70,7 +79,7 @@ public class LoginController implements Initializable {
     public User getUser(String usernameInput, String passwordInput) {
 
         ObservableList<User> usersObservableList = FXCollections.observableArrayList();
-        Banks.loadUserBank(false, true, usersObservableList);
+        usersObservableList.addAll(DataPersistence.loadBank("userBank"));
 
         User someUser = (usersObservableList.stream()
                 .filter(user -> usernameInput.equals((user).getUsername()))

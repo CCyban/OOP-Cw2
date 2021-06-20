@@ -2,6 +2,7 @@ package Controllers.Tabs.UserManagement;
 
 import Classes.Account.User;
 import Classes.Banks;
+import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -50,7 +51,8 @@ public class UserManagementController implements Initializable {
         });
 
         // Load all stored users into an ObservableList
-        Banks.loadUserBank(false, true, usersObservableList);
+        usersObservableList.clear();
+        usersObservableList.addAll(DataPersistence.loadBank("userBank"));
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewUsers();
@@ -178,11 +180,12 @@ public class UserManagementController implements Initializable {
 
     @FXML
     public void onLoadUsersClick() {
-        Banks.loadUserBank(true, true, usersObservableList);
+        usersObservableList.clear();
+        usersObservableList.addAll(DataPersistence.loadBank("userBank"));
     }
 
     @FXML
     public void onSaveUsersClick() {
-        Banks.saveUserBank(true, true, usersObservableList);
+        DataPersistence.saveBank("userBank", usersObservableList.stream().toList());
     }
 }

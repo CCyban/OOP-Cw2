@@ -1,6 +1,7 @@
 package Classes.Quiz;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import java.util.*;
@@ -43,10 +44,10 @@ public class Test implements java.io.Serializable {
     }
 
     public List<Question> getQuestions() {
-            ObservableList<Question> testQuestionsObservableList = FXCollections.observableArrayList();
+        ObservableList<Question> testQuestionsObservableList = FXCollections.observableArrayList();
 
         ObservableList<Question> questionBankObservableList = FXCollections.observableArrayList();
-        Banks.loadQuestionBank(false, true, questionBankObservableList);
+        questionBankObservableList.addAll(DataPersistence.loadBank("questionBank"));
 
         for (UUID questionUUID: questionUUIDs) {
 
@@ -62,7 +63,7 @@ public class Test implements java.io.Serializable {
 
     public int getTotalMarks() {
         ObservableList<Question> questionBankObservableList = FXCollections.observableArrayList();
-        Banks.loadQuestionBank(false, true, questionBankObservableList);
+        questionBankObservableList.addAll(DataPersistence.loadBank("questionBank"));
 
         int totalMarks = 0;
 

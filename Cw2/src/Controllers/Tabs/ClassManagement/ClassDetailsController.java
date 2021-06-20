@@ -3,6 +3,7 @@ package Controllers.Tabs.ClassManagement;
 import Classes.Account.User;
 import Classes.Banks;
 import Classes.Class;
+import Classes.DataPersistence;
 import Classes.Quiz.Question;
 import Enums.AccountType;
 import javafx.collections.FXCollections;
@@ -48,7 +49,8 @@ public class ClassDetailsController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         initTextFormattersForInputs();
 
-        Banks.loadUserBank(false, true, userBankObservableList);
+        userBankObservableList.clear();
+        userBankObservableList.addAll(DataPersistence.loadBank("userBank"));
 
         initUserTableView(tableViewUserBank, userBankObservableList);
         initUserTableView(tableViewClassUsers, classUsersObservableList);
@@ -153,7 +155,7 @@ public class ClassDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The class is added to the class bank. Save the class bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveClassBank(true, true, classesObservableList);
+                            DataPersistence.saveBank("classBank", classesObservableList.stream().toList());
                         }
                     });
                 } else {
@@ -168,7 +170,7 @@ public class ClassDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The class is edited. Save the class bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveClassBank(true, true, classesObservableList);
+                            DataPersistence.saveBank("classBank", classesObservableList.stream().toList());
                         }
                     });
                 } else {
@@ -200,7 +202,7 @@ public class ClassDetailsController implements Initializable {
         }
 
         // Adds the user to the class
-        selectedClass.addUser(((User) tableViewUserBank.getSelectionModel().getSelectedItem()).getUserUUID());
+        selectedClass.addUser((tableViewUserBank.getSelectionModel().getSelectedItem()).getUserUUID());
         // Refreshes data/table
         classUsersObservableList = FXCollections.observableArrayList(selectedClass.getUsers());
         tableViewClassUsers.setItems(classUsersObservableList);

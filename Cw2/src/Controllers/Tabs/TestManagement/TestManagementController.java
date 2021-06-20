@@ -1,6 +1,7 @@
 package Controllers.Tabs.TestManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.Quiz.Result;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
@@ -48,8 +49,9 @@ public class TestManagementController implements Initializable {
             tableViewTests.setItems(testsObservableList.filtered(predicateContainsNonCaseStringOnly));
         });
 
-        // Load (if any) stored tests into a ObservableList
-        Banks.loadTestBank(false, true, testsObservableList);
+        // Load (if any) stored tests into an ObservableList
+        testsObservableList.clear();
+        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewTests();
@@ -93,7 +95,7 @@ public class TestManagementController implements Initializable {
 
         // If the test has a result dependency, do not allow deletion
         ObservableList<Result> resultBank = FXCollections.observableArrayList();
-        Banks.loadResultBank(false, true, resultBank);
+        resultBank.addAll(DataPersistence.loadBank("resultBank"));
 
         Test selectedTest = ((Test) tableViewTests.getSelectionModel().getSelectedItem());
 
@@ -175,11 +177,12 @@ public class TestManagementController implements Initializable {
 
     @FXML
     public void onLoadTestsClick() {
-        Banks.loadTestBank(true, true, testsObservableList);
+        testsObservableList.clear();
+        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
     }
 
     @FXML
     public void onSaveTestsClick() {
-        Banks.saveTestBank(true, true, testsObservableList);
+        DataPersistence.saveBank("testBank", testsObservableList.stream().toList());
     }
 }

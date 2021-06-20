@@ -1,6 +1,7 @@
 package Controllers.Tabs.DoTestManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.Quiz.Result;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
@@ -48,7 +49,9 @@ public class ViewTestResultsController implements Initializable {
         });
 
         // Load (if any) stored tests into a ObservableList
-        Banks.loadResultBank(false, true, resultsObservableList);
+        resultsObservableList.clear();
+        resultsObservableList.addAll(DataPersistence.loadBank("resultBank"));
+
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewResults();
@@ -112,7 +115,8 @@ public class ViewTestResultsController implements Initializable {
         Result result = (Result) tableViewResults.getSelectionModel().getSelectedItem();
         UUID testUUID = result.getTestUUID();
 
-        Banks.loadTestBank(false, true, testsObservableList);
+        testsObservableList.clear();
+        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
 
         Test selectedTest = testsObservableList.stream()
                 .filter(test -> testUUID.equals(test.getTestUUID()))
@@ -149,11 +153,12 @@ public class ViewTestResultsController implements Initializable {
 
     @FXML
     public void onLoadResultsClick(ActionEvent event) {
-        Banks.loadResultBank(true, true, resultsObservableList);
+        resultsObservableList.clear();
+        resultsObservableList.addAll(DataPersistence.loadBank("resultBank"));
     }
 
     @FXML
     public void onSaveResultsClick(ActionEvent event) {
-        Banks.saveResultBank(true, true, resultsObservableList);
+        DataPersistence.saveBank("resultBank", resultsObservableList.stream().toList());
     }
 }

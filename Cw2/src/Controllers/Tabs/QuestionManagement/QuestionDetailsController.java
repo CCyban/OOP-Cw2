@@ -1,6 +1,7 @@
 package Controllers.Tabs.QuestionManagement;
 
 import Classes.Banks;
+import Classes.DataPersistence;
 import Classes.RegexTextFormatters;
 import Classes.Quiz.Question;
 import Enums.QuestionType;
@@ -308,7 +309,7 @@ public class QuestionDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The question is added to the question bank. Save the question bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveQuestionBank(true, true, questionsObservableList);
+                            DataPersistence.saveBank("questionBank", questionsObservableList.stream().toList());
                         }
                     });
                 } else {
@@ -323,7 +324,7 @@ public class QuestionDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The question is edited. Save the question bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveQuestionBank(true, true, questionsObservableList);
+                            DataPersistence.saveBank("questionBank", questionsObservableList.stream().toList());
                         }
                     });
                 } else {
@@ -340,7 +341,7 @@ public class QuestionDetailsController implements Initializable {
 
                     new Alert(Alert.AlertType.CONFIRMATION, "The question is cloned. Save the question bank now?").showAndWait().ifPresent(saveResponse -> {
                         if (saveResponse == ButtonType.OK) {
-                            Banks.saveQuestionBank(true, true, questionsObservableList);
+                            DataPersistence.saveBank("questionBank", questionsObservableList.stream().toList());
                         }
                     });
                 } else {
