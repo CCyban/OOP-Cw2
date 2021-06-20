@@ -1,7 +1,6 @@
 package Controllers.Initial;
 
 import Classes.Account.User;
-import Classes.Banks;
 import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

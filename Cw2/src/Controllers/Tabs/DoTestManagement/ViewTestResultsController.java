@@ -1,6 +1,5 @@
 package Controllers.Tabs.DoTestManagement;
 
-import Classes.Banks;
 import Classes.DataPersistence;
 import Classes.Quiz.Result;
 import Classes.Quiz.Test;

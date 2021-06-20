@@ -1,6 +1,5 @@
 package Classes.Quiz;
 
-import Classes.Banks;
 import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

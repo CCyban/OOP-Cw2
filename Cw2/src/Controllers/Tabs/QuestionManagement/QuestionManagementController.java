@@ -1,6 +1,5 @@
 package Controllers.Tabs.QuestionManagement;
 
-import Classes.Banks;
 import Classes.DataPersistence;
 import Classes.Quiz.Question;
 import Classes.Quiz.Test;
