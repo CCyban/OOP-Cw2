@@ -1,5 +1,6 @@
 package Controllers.Tabs.DoTestManagement;
 
+import Classes.Account.User;
 import Classes.DataPersistence;
 import Classes.RegexTextFormatters;
 import Classes.Quiz.Answer;
@@ -15,12 +16,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.util.*;
 
-public class DoTestDetailsController implements Initializable {
+public class DoTestDetailsController {
 
     private Test selectedTest;
 
@@ -47,12 +45,9 @@ public class DoTestDetailsController implements Initializable {
 
     private DoTestDetailsPurpose doTestDetailsPurpose;
 
+    private User currentUser;
+
     public enum DoTestDetailsPurpose { Add, Edit };
-
-
-    public void initialize(URL location, ResourceBundle resources) {
-
-    }
 
     public void onFinishTestClick(ActionEvent event) {
         ArrayList<Answer> arrayListAnswers = new ArrayList<Answer>();
@@ -103,7 +98,7 @@ public class DoTestDetailsController implements Initializable {
 
         switch (doTestDetailsPurpose) {
             case Add:
-                DataPersistence.updateResultBank(true, new Result(selectedTest.getTestUUID(), arrayListAnswers));
+                DataPersistence.updateResultBank(true, new Result(selectedTest.getTestUUID(), currentUser.getUserUUID(), arrayListAnswers));
                 break;
             case Edit:
                 selectedResult.setResultData(arrayListAnswers);
@@ -245,5 +240,9 @@ public class DoTestDetailsController implements Initializable {
             }
             default -> throw new IllegalArgumentException();
         }
+    }
+
+    public void setCurrentUser(User _currentUser) {
+        currentUser = _currentUser;
     }
 }

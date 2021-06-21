@@ -59,10 +59,16 @@ public class ViewTestResultsController implements Initializable {
     public void initTableViewResults() {
         // Set the TableColumns up for the TableView
         TableColumn idCol = new TableColumn("Result Id");
+        idCol.setPrefWidth(100);
         idCol.setCellValueFactory(new PropertyValueFactory<Result, UUID>("resultUUID"));
 
         TableColumn testIdCol = new TableColumn("Test Id");
+        testIdCol.setPrefWidth(100);
         testIdCol.setCellValueFactory(new PropertyValueFactory<Result, String>("testUUID"));
+
+        TableColumn userIdCol = new TableColumn("User Id");
+        userIdCol.setPrefWidth(100);
+        userIdCol.setCellValueFactory(new PropertyValueFactory<Result, String>("userUUID"));
 
         TableColumn testTitleCol = new TableColumn("Test Title");
         testTitleCol.setCellValueFactory(new PropertyValueFactory<Result, String>("testTitle"));
@@ -71,7 +77,7 @@ public class ViewTestResultsController implements Initializable {
         marksGainedCol.setCellValueFactory(new PropertyValueFactory<Result, String>("totalMarksAchieved"));
 
         // Add the constructed columns to the TableView
-        tableViewResults.getColumns().addAll(idCol, testIdCol, testTitleCol, marksGainedCol);
+        tableViewResults.getColumns().addAll(idCol, testIdCol, userIdCol, testTitleCol, marksGainedCol);
 
         // Hook up the observable list with the TableView
         tableViewResults.setItems(resultsObservableList);

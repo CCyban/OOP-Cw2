@@ -8,14 +8,16 @@ import java.util.*;
 public class Test implements java.io.Serializable {
 
     private final UUID testUUID;
+    private UUID classUUID;
     private String testTitle;
     private ArrayList<UUID> questionUUIDs;
 
-    public Test(String _testTitle, ArrayList<UUID> _questionUUIDs) {
+    public Test(UUID _classUUID ,String _testTitle, ArrayList<UUID> _questionUUIDs) {
         // Generate a UUID for the test
         testUUID = UUID.randomUUID();
 
         // Use payload values
+        classUUID = _classUUID;
         testTitle = _testTitle;
         questionUUIDs = _questionUUIDs;
     }
@@ -32,6 +34,14 @@ public class Test implements java.io.Serializable {
 
     public UUID getTestUUID() {
         return testUUID;
+    }
+
+    public UUID getClassUUID() {
+        return classUUID;
+    }
+
+    public void setClassUUID(UUID _classUUID) {
+        classUUID = _classUUID;
     }
 
     public String getTestTitle() {

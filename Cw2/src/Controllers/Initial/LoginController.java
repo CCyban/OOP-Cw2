@@ -98,6 +98,7 @@ public class LoginController implements Initializable {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/Views/Initial/Tabs.fxml"));
             Parent root = fxmlLoader.load();
+
             stage.setScene(new Scene(root, 1000, 600));
 
             TabsController tabsController = fxmlLoader.getController();

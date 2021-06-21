@@ -17,6 +17,7 @@ class ResultTest {
     private Result result = null;
 
     private UUID testUUID = UUID.randomUUID();
+    private UUID userUUID = UUID.randomUUID();
 
     private Answer Answer1 = new Answer(UUID.randomUUID(), 8, "Some answer");
     private Answer Answer2 = new Answer(UUID.randomUUID(), 11, "ANOTHER ANSWER");
@@ -27,7 +28,7 @@ class ResultTest {
 
     @BeforeEach
     void setUp() {
-        result = new Result(testUUID, resultData);
+        result = new Result(testUUID, userUUID, resultData);
     }
 
     @AfterEach
@@ -43,6 +44,11 @@ class ResultTest {
     @Test
     void getTestUUID() {
         assertEquals(testUUID, result.getTestUUID());   // Checking if it matches the values given into the constructor
+    }
+
+    @Test
+    void getUserUUID() {
+        assertEquals(userUUID, result.getUserUUID());   // Checking if the it matches the values given into the constructor
     }
 
     @Test

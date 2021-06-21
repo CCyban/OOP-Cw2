@@ -1,5 +1,6 @@
 package Controllers.Tabs.TestManagement;
 
+import Classes.Account.User;
 import Classes.DataPersistence;
 import Classes.Quiz.Result;
 import Classes.Quiz.Test;
@@ -33,6 +34,8 @@ public class TestManagementController implements Initializable {
 
     private ObservableList<Test> testsObservableList = FXCollections.observableArrayList();
 
+    private User currentUser;
+
     public enum TestDetailsPurpose { Add, Edit };
 
 
@@ -59,7 +62,15 @@ public class TestManagementController implements Initializable {
     public void initTableViewTests() {
         // Set the TableColumns up for the TableView
         TableColumn idCol = new TableColumn("Test Id");
+        idCol.setPrefWidth(100);
         idCol.setCellValueFactory(new PropertyValueFactory<Test, UUID>("testUUID"));
+
+        /*
+        TableColumn classIdCol = new TableColumn("Class Id");
+        classIdCol.setPrefWidth(100);
+        classIdCol.setCellValueFactory(new PropertyValueFactory<Test, UUID>("classUUID"));
+
+         */
 
         TableColumn testTitleCol = new TableColumn("Test Title");
         testTitleCol.setCellValueFactory(new PropertyValueFactory<Test, String>("TestTitle"));
@@ -144,8 +155,9 @@ public class TestManagementController implements Initializable {
         switch (testDetailsPurpose) {
             case Add -> {
                 stage.setTitle("Add New Test");
+                dialogController.setCurrentUser(currentUser);
                 dialogController.setTestDetailsPurpose(TestDetailsPurpose.Add);
-                Test newTest = new Test("", new ArrayList<>());
+                Test newTest = new Test(null,"", new ArrayList<>());
                 testsObservableList.add(newTest);
                 dialogController.setSelectedTest(newTest);
 
@@ -159,6 +171,7 @@ public class TestManagementController implements Initializable {
             }
             case Edit -> {
                 stage.setTitle("Edit Selected Test");
+                dialogController.setCurrentUser(currentUser);
                 dialogController.setTestDetailsPurpose(TestDetailsPurpose.Edit);
                 dialogController.setSelectedTest((Test) tableViewTests.getSelectionModel().getSelectedItem());
 
@@ -172,6 +185,10 @@ public class TestManagementController implements Initializable {
         // While ObservableList does observe the elements in the list, it doesn't seem to observe the values of one changing, giving cause for this to be used.
         // From the Java docs regarding the usage of the refresh method "This is useful in cases where the underlying data source has changed in a way that is not observed by the ListView itself"
         // Source - https://docs.oracle.com/javase/9/docs/api/javafx/scene/control/ListView.html
+    }
+
+    public void setCurrentUser(User _currentUser) {
+        currentUser = _currentUser;
     }
 
     @FXML

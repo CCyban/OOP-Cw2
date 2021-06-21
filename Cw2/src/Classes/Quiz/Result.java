@@ -10,14 +10,17 @@ public class Result implements java.io.Serializable {
 
     private final UUID resultUUID;
     private final UUID testUUID;
+    private final UUID userUUID;
+
     private ArrayList<Answer> resultData;
 
-    public Result(UUID _testUUID, ArrayList<Answer> _resultData) {
+    public Result(UUID _testUUID, UUID _userUUID, ArrayList<Answer> _resultData) {
         // Generate a UUID for the result
         resultUUID = UUID.randomUUID();
 
         // Use payload values
         testUUID = _testUUID;
+        userUUID = _userUUID;
         resultData = _resultData;
     }
 
@@ -27,6 +30,10 @@ public class Result implements java.io.Serializable {
 
     public UUID getTestUUID() {
         return testUUID;
+    }
+
+    public UUID getUserUUID() {
+        return userUUID;
     }
 
     public String getTestTitle() {

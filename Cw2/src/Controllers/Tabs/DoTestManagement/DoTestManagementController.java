@@ -1,5 +1,6 @@
 package Controllers.Tabs.DoTestManagement;
 
+import Classes.Account.User;
 import Classes.DataPersistence;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
@@ -32,6 +33,8 @@ public class DoTestManagementController implements Initializable {
 
     private ObservableList<Test> testsObservableList = FXCollections.observableArrayList();
 
+    private User currentUser;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Listeners
@@ -51,7 +54,6 @@ public class DoTestManagementController implements Initializable {
         // Load TableView with its columns & the newly made ObservableList
         initTableViewTests();
     }
-
 
     @FXML
     public void onStartSelectedTestClick(ActionEvent event) {
@@ -106,6 +108,7 @@ public class DoTestManagementController implements Initializable {
         stage.setTitle("Complete Test");
         dialogController.setSelectedTest(((Test) tableViewTests.getSelectionModel().getSelectedItem()));
         dialogController.setTestDoPurpose(DoTestDetailsController.DoTestDetailsPurpose.Add);
+        dialogController.setCurrentUser(currentUser);
 
         // The 'Wait' part in showAndWait means this method will wait here until the new stage is closed
         stage.showAndWait();
@@ -122,6 +125,10 @@ public class DoTestManagementController implements Initializable {
     public void onLoadLatestTestsClick() {
         testsObservableList.clear();
         testsObservableList.addAll(DataPersistence.loadBank("testBank"));
+    }
+
+    public void setCurrentUser(User _currentUser) {
+        currentUser = _currentUser;
     }
 
 }

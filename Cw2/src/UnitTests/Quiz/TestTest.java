@@ -14,6 +14,8 @@ class TestTest {
 
     private Classes.Quiz.Test test = null;
 
+    private UUID classUUID = UUID.randomUUID();
+
     private String testTitle = "A unit test :)";
 
     private UUID question1UUID = UUID.randomUUID();
@@ -25,7 +27,7 @@ class TestTest {
 
     @BeforeEach
     void setUp() {
-        test = new Classes.Quiz.Test(testTitle, questionUUIDs);
+        test = new Classes.Quiz.Test(classUUID, testTitle, questionUUIDs);
     }
 
     @AfterEach
@@ -68,6 +70,11 @@ class TestTest {
     @Test
     void getTestUUID() {
         UUID.fromString(test.getTestUUID().toString()); // Throws IllegalArgumentException if the test doesn't have a valid UUID
+    }
+
+    @Test
+    void getClassUUID() {
+        UUID.fromString(test.getClassUUID().toString()); // Checking if it matches the values given into the constructor
     }
 
     @Test
