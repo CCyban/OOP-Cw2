@@ -1,6 +1,7 @@
 package Controllers.Tabs.DoTestManagement;
 
 import Classes.Account.User;
+import Classes.Class;
 import Classes.DataPersistence;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
@@ -20,6 +21,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -47,11 +49,7 @@ public class DoTestManagementController implements Initializable {
             tableViewTests.setItems(testsObservableList.filtered(predicateContainsNonCaseStringOnly));
         });
 
-        // Load (if any) stored questions into a ObservableList
-        testsObservableList.clear();
-        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
-
-        // Load TableView with its columns & the newly made ObservableList
+        // Load TableView with its columns & the ObservableList of tests
         initTableViewTests();
     }
 
@@ -123,12 +121,34 @@ public class DoTestManagementController implements Initializable {
 
     @FXML
     public void onLoadLatestTestsClick() {
-        testsObservableList.clear();
-        testsObservableList.addAll(DataPersistence.loadBank("testBank"));
+        loadOnlyMyTests();
     }
 
     public void setCurrentUser(User _currentUser) {
         currentUser = _currentUser;
+
+        // Load (if any) tests assigned to the class my user is in, into an ObservableList
+        loadOnlyMyTests();
     }
 
+    public void loadOnlyMyTests() {
+        testsObservableList.clear();
+        List<Test> testBankList = DataPersistence.loadBank("testBank");
+        List<Class> classBankList = DataPersistence.loadBank("classBank");
+
+        for (Test test: testBankList) {
+            UUID testClassUUID = test.getClassUUID();
+            Class testClass = (classBankList.stream()
+                    .filter(c -> testClassUUID.equals((c).getClassUUID()))
+                    .findFirst()
+                    .orElse(null));
+            UUID myUser = (testClass.getUserUUIDs().stream()
+                    .filter(userUUID -> currentUser.getUserUUID().equals((userUUID)))
+                    .findFirst()
+                    .orElse(null));
+            if (myUser != null) {
+                testsObservableList.add(test);
+            }
+        }
+    }
 }
