@@ -47,9 +47,15 @@ public class DoTestDetailsController {
 
     private User currentUser;
 
-    public enum DoTestDetailsPurpose { Add, Edit };
+    public enum DoTestDetailsPurpose { Add, Edit, View };
 
     public void onFinishTestClick(ActionEvent event) {
+        if (doTestDetailsPurpose.equals(DoTestDetailsPurpose.View)) {
+            // Closes this dialog now that the purpose is complete
+            ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
+            return;
+        }
+
         ArrayList<Answer> arrayListAnswers = new ArrayList<Answer>();
 
         for (int index = 0; index < givenAnswerControlsArrayList.size(); index++) {
@@ -108,7 +114,7 @@ public class DoTestDetailsController {
                 throw new IllegalArgumentException();
         }
 
-        // Closes this dialog now that the result is added
+        // Closes this dialog now that the purpose is complete
         ((Stage)((Node)(event.getSource())).getScene().getWindow()).close();
     }
 
@@ -125,8 +131,6 @@ public class DoTestDetailsController {
             Question question = testQuestions.get(index);
             VBox vbox = new VBox();
             vbox.setSpacing(20);
-
-
 
             switch (question.getQuestionType()) {
                 case Arithmetic:
@@ -189,6 +193,7 @@ public class DoTestDetailsController {
 
             TitledPane titledPane = new TitledPane("Question " + (index + 1), vbox);
             titledPane.setAnimated(true);
+
             accordionTestQuestions.getPanes().add(titledPane);
         }
 
@@ -237,6 +242,23 @@ public class DoTestDetailsController {
                 buttonFinishTest.setText("Save Any Modifications");
                 labelTestMarksDescription.setText("Marks Gained:");
                 labelTestMarksValue.setText(selectedResult.getTotalMarksAchieved() + "/" + selectedTest.getTotalMarks());
+            }
+            case View -> {
+                buttonFinishTest.setText("Finish Viewing");
+                labelTestMarksDescription.setText("Marks Gained:");
+                labelTestMarksValue.setText(selectedResult.getTotalMarksAchieved() + "/" + selectedTest.getTotalMarks());
+
+                for (Object obj: givenAnswerControlsArrayList) {
+                    if (obj.getClass() == ToggleGroup.class) {
+                        ((ToggleGroup)obj).getToggles().forEach(toggle -> {
+                            Node node = (Node) toggle ;
+                            node.setDisable(true);
+                        });
+                    }
+                    else if (obj.getClass() == TextField.class) {
+                        ((TextField)obj).setDisable(true);
+                    }
+                }
             }
             default -> throw new IllegalArgumentException();
         }

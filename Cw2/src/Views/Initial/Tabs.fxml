@@ -32,7 +32,7 @@
             </Tab>
             <Tab fx:id="tabViewTestResults" style="-fx-font-size: 18px;" text="View Test Results">
                <content>
-                   <fx:include fx:id="ViewTestResults" source="../Tabs/DoTestManagement/ViewTestResultsManagement.fxml" />
+                   <fx:include fx:id="ViewTestResults" source="../Tabs/DoTestManagement/ViewTestResults.fxml" />
                </content>
             </Tab>
             <Tab fx:id="tabDoATest" style="-fx-font-size: 18px;" text="Do a Test">

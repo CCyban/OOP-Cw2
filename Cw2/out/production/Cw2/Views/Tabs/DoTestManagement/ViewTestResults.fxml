@@ -25,7 +25,7 @@
    <children>
       <VBox alignment="TOP_CENTER" prefHeight="200.0" prefWidth="100.0" spacing="30.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
          <children>
-            <Button mnemonicParsing="false" onAction="#onEditSelectedResultClick" prefWidth="182.0" text="Open/Edit Selected Result" textAlignment="CENTER" wrapText="true">
+            <Button mnemonicParsing="false" onAction="#onEditSelectedResultClick" prefWidth="182.0" text="Open Selected Result" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="18.0" />
                </font>

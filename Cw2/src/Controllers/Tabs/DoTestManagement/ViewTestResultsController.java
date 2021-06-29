@@ -1,8 +1,11 @@
 package Controllers.Tabs.DoTestManagement;
 
+import Classes.Account.User;
+import Classes.Class;
 import Classes.DataPersistence;
 import Classes.Quiz.Result;
 import Classes.Quiz.Test;
+import Enums.AccountType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,8 +21,12 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+
+import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -35,6 +42,8 @@ public class ViewTestResultsController implements Initializable {
 
     private ObservableList<Test> testsObservableList = FXCollections.observableArrayList();
 
+    private User currentUser;
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Listeners
@@ -47,10 +56,13 @@ public class ViewTestResultsController implements Initializable {
             tableViewResults.setItems(resultsObservableList.filtered(predicateContainsNonCaseStringOnly));
         });
 
+        /*
         // Load (if any) stored tests into a ObservableList
         resultsObservableList.clear();
         resultsObservableList.addAll(DataPersistence.loadBank("resultBank"));
 
+
+         */
 
         // Load TableView with its columns & the newly made ObservableList
         initTableViewResults();
@@ -62,11 +74,7 @@ public class ViewTestResultsController implements Initializable {
         idCol.setPrefWidth(100);
         idCol.setCellValueFactory(new PropertyValueFactory<Result, UUID>("resultUUID"));
 
-        TableColumn testIdCol = new TableColumn("Test Id");
-        testIdCol.setPrefWidth(100);
-        testIdCol.setCellValueFactory(new PropertyValueFactory<Result, String>("testUUID"));
-
-        TableColumn userIdCol = new TableColumn("User Id");
+        TableColumn userIdCol = new TableColumn("User Id"); // TODO: Swap out for user name or something more coherent
         userIdCol.setPrefWidth(100);
         userIdCol.setCellValueFactory(new PropertyValueFactory<Result, String>("userUUID"));
 
@@ -77,7 +85,7 @@ public class ViewTestResultsController implements Initializable {
         marksGainedCol.setCellValueFactory(new PropertyValueFactory<Result, String>("totalMarksAchieved"));
 
         // Add the constructed columns to the TableView
-        tableViewResults.getColumns().addAll(idCol, testIdCol, userIdCol, testTitleCol, marksGainedCol);
+        tableViewResults.getColumns().addAll(idCol, userIdCol, testTitleCol, marksGainedCol);
 
         // Hook up the observable list with the TableView
         tableViewResults.setItems(resultsObservableList);
@@ -130,8 +138,12 @@ public class ViewTestResultsController implements Initializable {
 
         dialogController.setSelectedTest(selectedTest);
         dialogController.setSelectedResult(result); // Important that this runs after the setSelectedTest as setSelectedTest generates the UI and this one fills it with the given answers
-        dialogController.setTestDoPurpose(DoTestDetailsController.DoTestDetailsPurpose.Edit);
-
+        if (currentUser.getAccountType() == AccountType.Student) {
+            dialogController.setTestDoPurpose(DoTestDetailsController.DoTestDetailsPurpose.View);
+        }
+        else if (currentUser.getAccountType() == AccountType.Teacher) {
+            dialogController.setTestDoPurpose(DoTestDetailsController.DoTestDetailsPurpose.Edit);
+        }
         // The 'Wait' part in showAndWait means this method will wait here until the new stage is closed
         stage.showAndWait();
 
@@ -158,12 +170,56 @@ public class ViewTestResultsController implements Initializable {
 
     @FXML
     public void onLoadResultsClick(ActionEvent event) {
-        resultsObservableList.clear();
-        resultsObservableList.addAll(DataPersistence.loadBank("resultBank"));
+        loadOnlyMyResults();
     }
 
     @FXML
     public void onSaveResultsClick(ActionEvent event) {
         DataPersistence.saveBank("resultBank", resultsObservableList.stream().toList());
+    }
+
+    public void setCurrentUser(User _currentUser) {
+        currentUser = _currentUser;
+
+        loadOnlyMyResults();
+    }
+
+    public void loadOnlyMyResults() {
+        if (currentUser.getAccountType() == AccountType.Student) {  // Goal is to load results from where the (signed in) student did the test
+            resultsObservableList.clear();
+            List<Result> resultBankList = DataPersistence.loadBank("resultBank");
+
+            for (Result result: resultBankList) {
+                if (currentUser.getUserUUID().equals(result.getUserUUID())) {
+                    resultsObservableList.add(result);
+                }
+            }
+        }
+        else if (currentUser.getAccountType() == AccountType.Teacher) { // The goal is to load test results from classes that only the (signed in) teacher is involved in
+            resultsObservableList.clear();
+            List<Class> classBankList = DataPersistence.loadBank("classBank");
+            List<Result> resultBankList = DataPersistence.loadBank("resultBank");
+
+            ArrayList<Class> teacherClasses = new ArrayList<>();
+
+            for (Class c: classBankList) {  // For each class in the classBank
+                for (UUID uuid: c.getUserUUIDs()) { // For each UUID in a class
+                    if (currentUser.getUserUUID().equals(uuid)) {   // If the teacher is a part of the class
+                        teacherClasses.add(c);  // Add it to the teacherClasses array so we know
+                    }
+                }
+            }
+
+            for (Result result: resultBankList) {   // For each result in the resultBank
+                UUID userUUID = result.getUserUUID();   // get the userUUID of the result
+
+                for (Class tc: teacherClasses) {    // For each class the teacher is in
+                    if (tc.getUserUUIDs().contains(userUUID)) { // If the result is a part of the class
+                        resultsObservableList.add(result);  // Add result to the results list because the teacher should be able to see it
+                    }
+                }
+            }
+
+        }
     }
 }

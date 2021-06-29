@@ -2,6 +2,7 @@ package Controllers.Initial;
 
 import Classes.Account.User;
 import Controllers.Tabs.DoTestManagement.DoTestManagementController;
+import Controllers.Tabs.DoTestManagement.ViewTestResultsController;
 import Controllers.Tabs.TestManagement.TestManagementController;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -44,6 +45,9 @@ public class TabsController {
     private Tab tabViewTestResults;
 
     @FXML
+    private ViewTestResultsController ViewTestResultsController;
+
+    @FXML
     private Tab tabDoATest;
 
     @FXML
@@ -74,6 +78,7 @@ public class TabsController {
         // Am only passing the currentUser to controllers that need it
         DoTestController.setCurrentUser(currentUser);   // The DoTestController would like to know the current user for saving results
         TestManagementController.setCurrentUser(currentUser);   // The TestManagementController wants to know it so it can show class options that only the user is in
+        ViewTestResultsController.setCurrentUser(currentUser);  // The ViewTestResultsController wants to know so it can only show results related to the user
 
         // Hide all tabs
         tabsPaneMain.getTabs().clear();
