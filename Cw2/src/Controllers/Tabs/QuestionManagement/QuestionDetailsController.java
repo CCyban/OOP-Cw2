@@ -78,8 +78,8 @@ public class QuestionDetailsController implements Initializable {
         }
         // Gather Answer value
         String answerInput = textAreaAnswerInput.getText();
-        if (answerInput.isEmpty()) {
-            showIncompleteFormError();
+        if (!textAreaAnswerInput.isDisable() && answerInput.isEmpty()) {
+            showIncompleteFormError(); // Returns incomplete form alert if the user can input one & it is still empty
             return;
         }
 
@@ -198,7 +198,7 @@ public class QuestionDetailsController implements Initializable {
     public void initComboBoxItemsForInputs() {
         // Inputting the questionTypes into the comboBox, any new types can be added here
         ObservableList<QuestionType> questionTypes = FXCollections.observableArrayList(
-                Arithmetic, MultiChoice);
+                QuestionType.values());
         comboBoxQuestionTypeInput.setItems(questionTypes);
     }
 
@@ -237,6 +237,11 @@ public class QuestionDetailsController implements Initializable {
 
                 // Set TextFormatter
                 RegexTextFormatters.setNumbersOnlyTextFormatter(textAreaAnswerInput);
+
+                // Enable the answer box as this type uses it
+                if (textAreaAnswerInput.isDisable()) {
+                    textAreaAnswerInput.setDisable(false);
+                }
             }
             case MultiChoice -> {
                 // Set PromptText
@@ -247,6 +252,24 @@ public class QuestionDetailsController implements Initializable {
                 if (textAreaAnswerInput.getTextFormatter() != null) {
                     textAreaAnswerInput.setTextFormatter(null); // Overwrite the preexisting text-formatter
                 }
+
+                // Enable the answer box as this type uses it
+                if (textAreaAnswerInput.isDisable()) {
+                    textAreaAnswerInput.setDisable(false);
+                }
+            }
+            case Manual -> {
+                // Set PromptText
+                labelQuestionHelpText.setText("Example: What is better: X or Y? Explain why");
+                labelAnswerHelpText.setText("There are no pre-defined answers needed for manually marked questions such as this");
+
+                // Set TextFormatter to null as one isn't needed for this question type
+                if (textAreaAnswerInput.getTextFormatter() != null) {
+                    textAreaAnswerInput.setTextFormatter(null); // Overwrite the preexisting text-formatter
+                }
+
+                // Disable the answer box as a manually marked question is directly marked by the teacher, not a pre-defined answer
+                textAreaAnswerInput.setDisable(true);
             }
             default -> throw new IllegalArgumentException();
         }
@@ -283,6 +306,11 @@ public class QuestionDetailsController implements Initializable {
                                 "\nAnswer: " + answerInput +
                                 "\nTags: " + tagsInput;
             }
+            case Manual -> contentText =
+                    "Marks: " + amountMarksInput +
+                            "\nQuestion Type: " + questionTypeInput +
+                            "\nQuestion: " + questionInput +
+                            "\nTags: " + tagsInput;
             default -> throw new IllegalArgumentException();
         }
         return contentText;

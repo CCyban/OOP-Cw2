@@ -1,5 +1,5 @@
 package Enums;
 
 public enum QuestionType {
-    Arithmetic, MultiChoice
+    Arithmetic, MultiChoice, Manual
 }
