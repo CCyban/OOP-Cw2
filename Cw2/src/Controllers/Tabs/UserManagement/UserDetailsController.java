@@ -124,54 +124,6 @@ public class UserDetailsController implements Initializable {
             }
         }
 
-        // TODO: Validation for inputs
-        // Question-type specific validation, am using switch statement here so new cases can easily be added whilst maintaining efficiency
-        /*
-        switch (accountTypeInput) {
-            case MultiChoice:
-                // Storing a local copy of the question string as it will be modified
-                String entireQuestion = questionInput;
-
-                if (!entireQuestion.contains("(") || !entireQuestion.contains(")")) {   //
-                    new Alert(Alert.AlertType.INFORMATION, "The question needs to contain options.\nLook at the help text below the question text box for an example.").show();
-                    return;
-                }
-
-                // Find the split of the subsections & remove the brackets to clean it up
-                int optionsIndex = entireQuestion.indexOf('(');                     // Finds where initial question ends & the options begin
-                entireQuestion = entireQuestion.replace("(", "");   // Removes the '('
-                entireQuestion = entireQuestion.replace(")", "");   // Removes the ')'
-
-                if (entireQuestion.length() + 2 != questionInput.length()) { // If the question contains more brackets than just a single pair, alert user to do it properly
-                    new Alert(Alert.AlertType.ERROR, "The question contains more brackets than just a single pair for options.").show();
-                    return;
-                }
-
-                // Get the 'options' subsection
-                String questionOptionsString = entireQuestion.substring(optionsIndex);    // Splits the entireQuestion into the question options part
-                List questionOptionsList = Arrays.asList(questionOptionsString.split("\\s*,\\s*"));
-
-                if (questionOptionsList.size() > 4 ) { // If the question contains at least 1 option
-                    new Alert(Alert.AlertType.ERROR, "There needs to be no more than 4 options in the question.").show();
-                    return;
-                }
-
-                if (questionOptionsList.size() == 1 && questionOptionsList.get(0).equals("")) {
-                    new Alert(Alert.AlertType.ERROR, "There needs to at least 1 option in the question.").show();
-                    return;
-                }
-
-
-                if (!questionOptionsList.contains(answerInput)) {
-                    new Alert(Alert.AlertType.INFORMATION, "One of the question options needs to be the answer").show();
-                    return;
-                }
-                break;
-            default: break; // It's okay if a question-type doesn't need any further validation than the general validation
-        }
-
-         */
-
         // Generate the user in text-form in preparation to show to the user for confirmation
         String contentText = getContentText(accountTypeInput, firstNameInput, lastNameInput, usernameInput, passwordInput, dateOfBirthInput);
 
@@ -196,6 +148,8 @@ public class UserDetailsController implements Initializable {
                 // Must make the user select a user type first
                 textFieldFirstNameInput.setDisable(true);
                 textFieldLastNameInput.setDisable(true);
+                textFieldUsernameInput.setDisable(true);
+                textFieldPasswordInput.setDisable(true);
                 datePickerDOBInput.setDisable(true);
                 break;
             case Edit:
@@ -249,6 +203,8 @@ public class UserDetailsController implements Initializable {
         if (textFieldFirstNameInput.isDisable()) {
             textFieldFirstNameInput.setDisable(false);
             textFieldLastNameInput.setDisable(false);
+            textFieldUsernameInput.setDisable(false);
+            textFieldPasswordInput.setDisable(false);
             datePickerDOBInput.setDisable(false);
         }
 
