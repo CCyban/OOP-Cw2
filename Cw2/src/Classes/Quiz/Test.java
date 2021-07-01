@@ -1,5 +1,7 @@
 package Classes.Quiz;
 
+import Classes.Account.User;
+import Classes.Class;
 import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -86,5 +88,22 @@ public class Test implements java.io.Serializable {
             totalMarks += currentQuestion.getCorrectMarks();
         }
         return totalMarks;
+    }
+
+    public String getClassSubject() {
+        ObservableList<Class> userBankObservableList = FXCollections.observableArrayList();
+        userBankObservableList.addAll(DataPersistence.loadBank("classBank"));
+
+        Class theClass = (userBankObservableList.stream()
+                .filter(aClass -> classUUID.equals((aClass).getClass()))
+                .findFirst()
+                .orElse(null));
+
+        if (theClass == null) {
+            return null;
+        }
+        else {
+            return theClass.getSubject();
+        }
     }
 }

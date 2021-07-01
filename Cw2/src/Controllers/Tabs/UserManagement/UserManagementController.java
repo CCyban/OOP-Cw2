@@ -60,13 +60,15 @@ public class UserManagementController implements Initializable {
     public void initTableViewUsers() {
         // Set the TableColumns up for the TableView
         TableColumn idCol = new TableColumn("User Id");
-        idCol.setCellValueFactory(new PropertyValueFactory<User, UUID>("userUUID"));
         idCol.setPrefWidth(100);
+        idCol.setCellValueFactory(new PropertyValueFactory<User, UUID>("userUUID"));
 
         TableColumn typeCol = new TableColumn("Type");
+        typeCol.setPrefWidth(110);
         typeCol.setCellValueFactory(new PropertyValueFactory<User, Enums.AccountType>("accountType"));
 
-        TableColumn nameCol = new TableColumn("Name");
+        TableColumn nameCol = new TableColumn("Full Name");
+        nameCol.setPrefWidth(530);
         nameCol.setCellValueFactory(new PropertyValueFactory<User, Integer>("fullName"));
 
 

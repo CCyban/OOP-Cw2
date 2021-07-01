@@ -61,13 +61,15 @@ public class ClassManagementController implements Initializable {
     public void initTableViewClasses() {
         // Set the TableColumns up for the TableView
         TableColumn idCol = new TableColumn("Class Id");
-        idCol.setCellValueFactory(new PropertyValueFactory<Class, UUID>("classUUID"));
         idCol.setPrefWidth(100);
+        idCol.setCellValueFactory(new PropertyValueFactory<Class, UUID>("classUUID"));
 
         TableColumn yearCol = new TableColumn("Year Group");
+        yearCol.setPrefWidth(150);
         yearCol.setCellValueFactory(new PropertyValueFactory<Class, String>("yearGroup"));
 
         TableColumn subjectCol = new TableColumn("Subject");
+        subjectCol.setPrefWidth(300);
         subjectCol.setCellValueFactory(new PropertyValueFactory<Class, String>("Subject"));
 
         // Add the constructed columns to the TableView

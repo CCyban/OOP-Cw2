@@ -1,5 +1,6 @@
 package Classes.Quiz;
 
+import Classes.Account.User;
 import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -40,12 +41,34 @@ public class Result implements java.io.Serializable {
         ObservableList<Test> testBankObservableList = FXCollections.observableArrayList();
         testBankObservableList.addAll(DataPersistence.loadBank("testBank"));
 
-        String testTitle = (testBankObservableList.stream()
+        Test theTest = testBankObservableList.stream()
                 .filter(test -> testUUID.equals((test).getTestUUID()))
                 .findFirst()
-                .orElse(null)).getTestTitle();
+                .orElse(null);
 
-        return testTitle;
+        if (theTest == null) {
+            return null;
+        }
+        else {
+            return theTest.getTestTitle();
+        }
+    }
+
+    public String getFullName() {
+        ObservableList<User> userBankObservableList = FXCollections.observableArrayList();
+        userBankObservableList.addAll(DataPersistence.loadBank("userBank"));
+
+        User theUser = (userBankObservableList.stream()
+                .filter(user -> userUUID.equals((user).getUserUUID()))
+                .findFirst()
+                .orElse(null));
+
+        if (theUser == null) {
+            return null;
+        }
+        else {
+            return theUser.getFullName();
+        }
     }
 
     public ArrayList<Answer> getResultData() {

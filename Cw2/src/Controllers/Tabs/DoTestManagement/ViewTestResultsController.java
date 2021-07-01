@@ -74,18 +74,16 @@ public class ViewTestResultsController implements Initializable {
         idCol.setPrefWidth(100);
         idCol.setCellValueFactory(new PropertyValueFactory<Result, UUID>("resultUUID"));
 
-        TableColumn userIdCol = new TableColumn("User Id"); // TODO: Swap out for user name or something more coherent
-        userIdCol.setPrefWidth(100);
-        userIdCol.setCellValueFactory(new PropertyValueFactory<Result, String>("userUUID"));
-
         TableColumn testTitleCol = new TableColumn("Test Title");
+        testTitleCol.setPrefWidth(250);
         testTitleCol.setCellValueFactory(new PropertyValueFactory<Result, String>("testTitle"));
 
         TableColumn marksGainedCol = new TableColumn("Marks Gained");
+        marksGainedCol.setPrefWidth(100);
         marksGainedCol.setCellValueFactory(new PropertyValueFactory<Result, String>("totalMarksAchieved"));
 
         // Add the constructed columns to the TableView
-        tableViewResults.getColumns().addAll(idCol, userIdCol, testTitleCol, marksGainedCol);
+        tableViewResults.getColumns().addAll(idCol, testTitleCol, marksGainedCol);
 
         // Hook up the observable list with the TableView
         tableViewResults.setItems(resultsObservableList);
@@ -182,6 +180,7 @@ public class ViewTestResultsController implements Initializable {
         currentUser = _currentUser;
 
         loadOnlyMyResults();
+        loadFullNameColumnIfNeeded();
     }
 
     public void loadOnlyMyResults() {
@@ -220,6 +219,16 @@ public class ViewTestResultsController implements Initializable {
                 }
             }
 
+        }
+    }
+
+    public void loadFullNameColumnIfNeeded() {
+        if (currentUser.getAccountType() != AccountType.Student) {
+            TableColumn userFullNameCol = new TableColumn("User's Full Name");
+            userFullNameCol.setPrefWidth(290);
+            userFullNameCol.setCellValueFactory(new PropertyValueFactory<Result, String>("fullName"));
+
+            tableViewResults.getColumns().add(userFullNameCol);
         }
     }
 }

@@ -65,21 +65,20 @@ public class TestManagementController implements Initializable {
         idCol.setPrefWidth(100);
         idCol.setCellValueFactory(new PropertyValueFactory<Test, UUID>("testUUID"));
 
-        /*
-        TableColumn classIdCol = new TableColumn("Class Id");
-        classIdCol.setPrefWidth(100);
-        classIdCol.setCellValueFactory(new PropertyValueFactory<Test, UUID>("classUUID"));
-
-         */
+        TableColumn classSubjectCol = new TableColumn("Class Subject");
+        classSubjectCol.setPrefWidth(230);
+        classSubjectCol.setCellValueFactory(new PropertyValueFactory<Test, UUID>("classSubject"));
 
         TableColumn testTitleCol = new TableColumn("Test Title");
+        testTitleCol.setPrefWidth(250);
         testTitleCol.setCellValueFactory(new PropertyValueFactory<Test, String>("TestTitle"));
 
         TableColumn totalMarksCol = new TableColumn("Total Possible Marks");
+        totalMarksCol.setPrefWidth(160);
         totalMarksCol.setCellValueFactory(new PropertyValueFactory<Test, Integer>("totalMarks"));
 
         // Add the constructed columns to the TableView
-        tableViewTests.getColumns().addAll(idCol, testTitleCol, totalMarksCol);
+        tableViewTests.getColumns().addAll(idCol, classSubjectCol, testTitleCol, totalMarksCol);
 
         // Hook up the observable list with the TableView
         tableViewTests.setItems(testsObservableList);
