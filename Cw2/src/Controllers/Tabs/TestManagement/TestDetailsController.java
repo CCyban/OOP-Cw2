@@ -60,7 +60,7 @@ public class TestDetailsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Listeners
-        textFieldQuestionBankSearchInput.textProperty().addListener((Observable, oldValue, newValue) -> { // TODO: Make it search for a given multiple tags, not just one
+        textFieldQuestionBankSearchInput.textProperty().addListener((Observable, oldValue, newValue) -> {
 
             // Simply returns true if a tag from a question contains the string from the search (purposely not case-sensitive)
             Predicate<Question> predicateContainsNonCaseStringOnly = q -> (q.getTags().toString().toUpperCase().contains(textFieldQuestionBankSearchInput.getText().toUpperCase()));
@@ -69,7 +69,7 @@ public class TestDetailsController implements Initializable {
             tableViewQuestionBank.setItems(questionBankObservableList.filtered(predicateContainsNonCaseStringOnly));
 
         });
-        textFieldTestQuestionsSearchInput.textProperty().addListener((Observable, oldValue, newValue) -> { // TODO: Make it search for a given multiple tags, not just one
+        textFieldTestQuestionsSearchInput.textProperty().addListener((Observable, oldValue, newValue) -> {
 
             // Simply returns true if a tag from a question contains the string from the search (purposely not case-sensitive)
             Predicate<Question> predicateContainsNonCaseStringOnly = q -> (q.getTags().toString().toUpperCase().contains(textFieldTestQuestionsSearchInput.getText().toUpperCase()));
@@ -95,11 +95,11 @@ public class TestDetailsController implements Initializable {
 
         // Gather assigned class value
         UUID assignedClassUUIDInput = null;
-        String assignedClassYearGroupInput = comboBoxAssignedClassInput.getValue().toString();
-        if (assignedClassYearGroupInput.isEmpty()) {
+        if (comboBoxAssignedClassInput.getValue() == null) {
             showIncompleteFormError();
             return;
         }
+        String assignedClassYearGroupInput = comboBoxAssignedClassInput.getValue().toString();
         List<Class> classBank = DataPersistence.loadBank("classBank");
         for (Class c: classBank) {
             if (c.getYearGroup().equals(assignedClassYearGroupInput)) {

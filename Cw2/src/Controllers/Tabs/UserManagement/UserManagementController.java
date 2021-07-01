@@ -39,7 +39,7 @@ public class UserManagementController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         // Listeners
-        textFieldSearch.textProperty().addListener((Observable, oldValue, newValue) -> { // TODO: Make it search for a given multiple tags, not just one
+        textFieldSearch.textProperty().addListener((Observable, oldValue, newValue) -> {
 
             // Simply returns true if a tag from a user contains the string from the search (purposely not case-sensitive)
             Predicate<User> predicateContainsNonCaseStringOnly = q -> (q.getFullName().toUpperCase().contains(textFieldSearch.getText().toUpperCase()));

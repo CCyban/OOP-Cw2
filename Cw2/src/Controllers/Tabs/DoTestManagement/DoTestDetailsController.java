@@ -9,13 +9,11 @@ import Classes.Quiz.Result;
 import Classes.Quiz.Test;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import java.net.URL;
 import java.util.*;
 
 public class DoTestDetailsController {
@@ -65,7 +63,7 @@ public class DoTestDetailsController {
             Object answer = givenAnswerControlsArrayList.get(index);
             int marksAchieved = 0;
 
-            // TODO: Convert to switch cases
+            // Cannot use switch cases as they only work certain types
             if (answer.getClass() == ToggleGroup.class) {
 
                 // If the user didn't select an answer, alert the user & abort the finish test procedure
@@ -127,15 +125,12 @@ public class DoTestDetailsController {
         }
 
         switch (doTestDetailsPurpose) {
-            case Add:
-                DataPersistence.updateResultBank(true, new Result(selectedTest.getTestUUID(), currentUser.getUserUUID(), arrayListAnswers));
-                break;
-            case Edit:
+            case Add -> DataPersistence.updateResultBank(true, new Result(selectedTest.getTestUUID(), currentUser.getUserUUID(), arrayListAnswers));
+            case Edit -> {
                 selectedResult.setResultData(arrayListAnswers);
                 DataPersistence.updateResultBank(false, selectedResult);
-                break;
-            default:
-                throw new IllegalArgumentException();
+            }
+            default -> throw new IllegalArgumentException();
         }
 
         // Closes this dialog now that the purpose is complete
@@ -229,8 +224,6 @@ public class DoTestDetailsController {
                     textAreaQuestion.setPrefWidth(850);
                     givenAnswerControlsArrayList.add(textAreaQuestion);
 
-                    // TODO: Could add char-limit TextFormatter here
-
                     // Creating and adding the answer HBox to the question VBox
                     HBox hbox = new HBox();
                     hbox.setSpacing(50);
@@ -259,7 +252,7 @@ public class DoTestDetailsController {
             Object indexAnswerControl = givenAnswerControlsArrayList.get(index);
             String indexAnswer = ((Answer)givenAnswersArrayList.get(index)).getGivenAnswer();
 
-            // TODO: Convert to switch cases
+            // Cannot use switch cases as they only work certain types
             if (indexAnswerControl.getClass() == ToggleGroup.class) {
 
                 // Set the result's chosen radio button to be selected
@@ -333,7 +326,7 @@ public class DoTestDetailsController {
 
                 int index = 0;
                 for (Object obj: givenAnswerControlsArrayList) {
-                    // TODO: Convert to switch cases
+                    // Cannot use switch cases as they only work certain types
                     if (obj.getClass() == ToggleGroup.class) {
                         ((ToggleGroup)obj).getToggles().forEach(toggle -> {
                             Node node = (Node) toggle ;

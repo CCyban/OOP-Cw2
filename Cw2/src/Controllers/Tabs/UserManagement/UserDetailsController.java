@@ -109,14 +109,14 @@ public class UserDetailsController implements Initializable {
 
 
         // If a new user is being made OR if a username has been changed
-        if (userDetailsPurpose == UserManagementController.UserDetailsPurpose.Add || usernameInput != selectedUser.getUsername()) {
+        if (userDetailsPurpose == UserManagementController.UserDetailsPurpose.Add || !usernameInput.equals(selectedUser.getUsername())) {
             ObservableList<User> usersObservableList = FXCollections.observableArrayList();
             usersObservableList.addAll(DataPersistence.loadBank("userBank"));
 
-            User someUser = (usersObservableList.stream()
+            User someUser = usersObservableList.stream()
                     .filter(user -> usernameInput.equals((user).getUsername()))
                     .findFirst()
-                    .orElse(null));
+                    .orElse(null);
 
             if (someUser != null) { // If the username already exists, alert the user that they cannot use the username
                 new Alert(Alert.AlertType.INFORMATION, "The username is already in use. Please use a different one.").show();
@@ -343,14 +343,16 @@ public class UserDetailsController implements Initializable {
                             // Update the user data with the newly edited values
                             selectedUser.setFirstName(firstNameInput);
                             selectedUser.setLastName(lastNameInput);
-                            if (selectedUser.getAccountType() == AccountType.Student) {
-                                ((Student)selectedUser).setDateOfBirth(dateOfBirthInput);
-                            }
+                            selectedUser.setUsername(usernameInput);
+                            selectedUser.setPassword(passwordInput);
+                            ((Student)selectedUser).setDateOfBirth(dateOfBirthInput);
                         }
                         case Teacher, SysAdmin -> {
                             // Update the user data with the newly edited values
                             selectedUser.setFirstName(firstNameInput);
                             selectedUser.setLastName(lastNameInput);
+                            selectedUser.setUsername(usernameInput);
+                            selectedUser.setPassword(passwordInput);
                         }
                     }
 
