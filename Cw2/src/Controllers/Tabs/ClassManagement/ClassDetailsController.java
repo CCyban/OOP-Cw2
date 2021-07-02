@@ -41,8 +41,6 @@ public class ClassDetailsController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        initTextFormattersForInputs();
-
         userBankObservableList.clear();
         userBankObservableList.addAll(DataPersistence.loadBank("userBank"));
 
@@ -116,10 +114,6 @@ public class ClassDetailsController implements Initializable {
 
     public void showIncompleteFormError() {
         new Alert(Alert.AlertType.ERROR, "All required inputs are not filled in").show();
-    }
-
-    public void initTextFormattersForInputs() {
-        // TODO: Maybe?
     }
 
     public String getContentText(String yearGroupInput, String subjectInput, int usersCount) {

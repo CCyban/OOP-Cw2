@@ -2,6 +2,8 @@ package Controllers.Tabs.ClassManagement;
 
 import Classes.Class;
 import Classes.DataPersistence;
+import Classes.Quiz.Result;
+import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -91,35 +93,28 @@ public class ClassManagementController implements Initializable {
 
     @FXML
     public void onRemoveSelectedClassClick(ActionEvent event) {
-        // If a user is not selected then the action cannot proceed
+        // If a class is not selected then the action cannot proceed
         if (tableViewClasses.getSelectionModel().getSelectedItem() == null) {
             new Alert(Alert.AlertType.ERROR, "No class is selected with your action").show();
             return;
         }
 
+        // If the class has a test dependency, do not allow deletion
+        ObservableList<Test> testBank = FXCollections.observableArrayList(DataPersistence.loadBank("testBank"));
 
-        /*
-        // If the question has a test dependency, do not allow deletion
-        ObservableList<Test> testBank = FXCollections.observableArrayList();
-        Banks.loadTestBank(false, true, testBank);
+        Class selectedClass = ((Class) tableViewClasses.getSelectionModel().getSelectedItem());
 
-        Question selectedQuestion = ((Question) tableViewQuestions.getSelectionModel().getSelectedItem());
+        for (Test test: testBank) { // For every result in the resultBank
+            UUID testClassUUID = test.getClassUUID();   // Get the class UUID of the test
 
-        for (Test test: testBank) { // For every test in the testBank
-
-            List<UUID> testQuestionUUIDsList = test.getQuestionUUIDs();
-
-            for (UUID questionUUID: testQuestionUUIDsList) {    // For every question in a test, check if it uses a question that the user wishes to delete
-                if (questionUUID.toString().equals(selectedQuestion.getQuestionUUID().toString())) {
-                    new Alert(Alert.AlertType.ERROR, "This user is used in results, therefore it cannot be deleted. Delete the related results first to delete this.").show();
-                    return;
-                }
+            // Am using .toString() on the UUIDs because they will never match otherwise due to how the UUID type works
+            if (testClassUUID.toString().equals(selectedClass.getClassUUID().toString())) { // If it matches then alert the user that it has an existing usage so it cannot be deleted just yet.
+                new Alert(Alert.AlertType.ERROR, "This class is used in at least one test, therefore it cannot be deleted. Separate this class from any tests first to delete this.").show();
+                return;
             }
         }
-        // TODO: Add results dependency
-         */
 
-        // Now that we know a user is selected & it has no result dependencies, it can be deleted safely
+        // Now that we know a class is selected & it has no test dependencies, it can be deleted safely
         classesObservableList.remove(
                 tableViewClasses.getSelectionModel().getSelectedItem()
         ); // Removes the selected item from the usersObservableList

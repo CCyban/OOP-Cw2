@@ -67,7 +67,7 @@ public class TestManagementController implements Initializable {
 
         TableColumn classSubjectCol = new TableColumn("Class Subject");
         classSubjectCol.setPrefWidth(230);
-        classSubjectCol.setCellValueFactory(new PropertyValueFactory<Test, UUID>("classSubject"));
+        classSubjectCol.setCellValueFactory(new PropertyValueFactory<Test, String>("classSubject"));
 
         TableColumn testTitleCol = new TableColumn("Test Title");
         testTitleCol.setPrefWidth(250);

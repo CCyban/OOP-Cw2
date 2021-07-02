@@ -91,11 +91,11 @@ public class Test implements java.io.Serializable {
     }
 
     public String getClassSubject() {
-        ObservableList<Class> userBankObservableList = FXCollections.observableArrayList();
-        userBankObservableList.addAll(DataPersistence.loadBank("classBank"));
+        ObservableList<Class> classBankObservableList = FXCollections.observableArrayList();
+        classBankObservableList.addAll(DataPersistence.loadBank("classBank"));
 
-        Class theClass = (userBankObservableList.stream()
-                .filter(aClass -> classUUID.equals((aClass).getClass()))
+        Class theClass = (classBankObservableList.stream()
+                .filter(aClass -> classUUID.toString().equals((aClass).getClassUUID().toString()))
                 .findFirst()
                 .orElse(null));
 

@@ -1,7 +1,10 @@
 package Controllers.Tabs.UserManagement;
 
 import Classes.Account.User;
+import Classes.Class;
 import Classes.DataPersistence;
+import Classes.Quiz.Result;
+import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -20,6 +23,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -98,26 +102,34 @@ public class UserManagementController implements Initializable {
         }
 
 
-        /*
-        // If the question has a test dependency, do not allow deletion
-        ObservableList<Test> testBank = FXCollections.observableArrayList();
-        Banks.loadTestBank(false, true, testBank);
+        User selectedUser = ((User) tableViewUsers.getSelectionModel().getSelectedItem());
 
-        Question selectedQuestion = ((Question) tableViewQuestions.getSelectionModel().getSelectedItem());
+        // If the user has a result dependency, do not allow deletion
+        ObservableList<Result> resultBank = FXCollections.observableArrayList(DataPersistence.loadBank("resultBank"));
 
-        for (Test test: testBank) { // For every test in the testBank
+        for (Result result: resultBank) { // For every result in the resultBank
+            UUID resultUserUUID = result.getUserUUID();   // Get the user UUID of the result
 
-            List<UUID> testQuestionUUIDsList = test.getQuestionUUIDs();
+            // Am using .toString() on the UUIDs because they will never match otherwise due to how the UUID type works
+            if (resultUserUUID.toString().equals(selectedUser.getUserUUID().toString())) { // If it matches then alert the user that it has an existing usage so it cannot be deleted just yet.
+                new Alert(Alert.AlertType.ERROR, "This user is used in at least one result, therefore it cannot be deleted. Delete the related results to delete this.").show();
+                return;
+            }
+        }
 
-            for (UUID questionUUID: testQuestionUUIDsList) {    // For every question in a test, check if it uses a question that the user wishes to delete
-                if (questionUUID.toString().equals(selectedQuestion.getQuestionUUID().toString())) {
-                    new Alert(Alert.AlertType.ERROR, "This user is used in results, therefore it cannot be deleted. Delete the related results first to delete this.").show();
+        // If the user has a class dependency, do not allow deletion
+        ObservableList<Class> classBank = FXCollections.observableArrayList(DataPersistence.loadBank("classBank"));
+
+        for (Class aClass: classBank) { // For every class in the classBank
+            List<UUID> resultUserUUIDsList = aClass.getUserUUIDs();   // Get the user UUID of the class
+
+            for (UUID userUUID: resultUserUUIDsList) {    // For every user in a class, check if it contains a user that this user wishes to delete
+                if (userUUID.toString().equals(selectedUser.getUserUUID().toString())) {
+                    new Alert(Alert.AlertType.ERROR, "This user is used in at least one class, therefore it cannot be deleted. Separate any classes from this user first to delete this.").show();
                     return;
                 }
             }
         }
-        // TODO: Add results dependency
-         */
 
         // Now that we know a user is selected & it has no result dependencies, it can be deleted safely
         usersObservableList.remove(

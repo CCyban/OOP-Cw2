@@ -113,11 +113,13 @@ public class DoTestDetailsController {
                     return;
                 }
 
-                // Extracting the marks gained value
-                marksAchieved = Integer.parseInt(((TextField)((HBox) givenVBoxesArrayList.get(index)
-                        .getChildren().get(0))      // Getting the first element of the vbox, which is always a HBox
-                        .getChildren().get(1))      // Getting the second element of the HBox, which is a TextField in this case
-                        .getText());                // Extracting the latest value of the marks assigned by the teacher (as this is a manual question case)
+                if (doTestDetailsPurpose == DoTestDetailsPurpose.Edit) {
+                    // Extracting the marks gained value, but only when the teacher reviews the results as that's the only time a manual question like this gets given marks & not 0 by default
+                    marksAchieved = Integer.parseInt(((TextField) ((HBox) givenVBoxesArrayList.get(index)
+                            .getChildren().get(0))      // Getting the first element of the vbox, which is always a HBox
+                            .getChildren().get(1))      // Getting the second element of the HBox, which is a TextField in this case
+                            .getText());                // Extracting the latest value of the marks assigned by the teacher (as this is a manual question case)
+                }
 
                 // Save given answer with its details
                 arrayListAnswers.add(new Answer(testQuestions.get(index).getQuestionUUID(), marksAchieved, answerGiven));

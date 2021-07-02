@@ -54,7 +54,6 @@ public class UserDetailsController implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         initComboBoxItemsForInputs();
-        initTextFormattersForInputs();
     }
 
     @FXML
@@ -191,10 +190,6 @@ public class UserDetailsController implements Initializable {
         Arrays.stream(AccountType.values()).forEach(o -> userTypes.add(o));
 
         comboBoxUserTypeInput.setItems(userTypes);
-    }
-
-    public void initTextFormattersForInputs() {
-        // TODO: Maybe?
     }
 
     @FXML
