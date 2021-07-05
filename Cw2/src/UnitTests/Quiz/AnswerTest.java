@@ -31,4 +31,9 @@ class AnswerTest {
     void getGivenAnswer() {
         assertEquals(answerGiven, answer.getGivenAnswer()); // Checking if it matches the values given into the constructor
     }
+
+    @Test
+    void getMarksAchieved() {
+        assertEquals(marksAchieved, answer.getMarksAchieved()); // Checking if it matches the values given into the constructor
+    }
 }
