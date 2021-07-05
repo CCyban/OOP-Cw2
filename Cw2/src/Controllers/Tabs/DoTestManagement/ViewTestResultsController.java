@@ -14,10 +14,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -36,6 +33,9 @@ public class ViewTestResultsController implements Initializable {
 
     @FXML
     private TextField textFieldSearch;
+
+    @FXML
+    private Button buttonRemoveSelectedResult;
 
     private ObservableList<Result> resultsObservableList = FXCollections.observableArrayList();
 
@@ -180,6 +180,7 @@ public class ViewTestResultsController implements Initializable {
 
         loadOnlyMyResults();
         loadFullNameColumnIfNeeded();
+        loadRemoveButtonIfPossible();
     }
 
     public void loadOnlyMyResults() {
@@ -228,6 +229,15 @@ public class ViewTestResultsController implements Initializable {
             userFullNameCol.setCellValueFactory(new PropertyValueFactory<Result, String>("fullName"));
 
             tableViewResults.getColumns().add(userFullNameCol);
+        }
+    }
+
+    public void loadRemoveButtonIfPossible() {
+        if (currentUser.getAccountType() == AccountType.Student) {
+            buttonRemoveSelectedResult.setVisible(false);
+        }
+        else {
+            buttonRemoveSelectedResult.setVisible(true);
         }
     }
 }

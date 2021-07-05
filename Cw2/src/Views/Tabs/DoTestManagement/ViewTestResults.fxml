@@ -36,7 +36,7 @@
                   <Insets bottom="5.0" left="20.0" right="20.0" top="5.0" />
                </padding>
             </Button>
-            <Button mnemonicParsing="false" onAction="#onRemoveSelectedResultClick" prefWidth="182.0" text="Remove Selected Result" textAlignment="CENTER" wrapText="true">
+            <Button fx:id="buttonRemoveSelectedResult" mnemonicParsing="false" onAction="#onRemoveSelectedResultClick" prefWidth="182.0" text="Remove Selected Result" textAlignment="CENTER" wrapText="true">
                <font>
                   <Font size="18.0" />
                </font>
