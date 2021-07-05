@@ -1,11 +1,10 @@
 package Controllers.Tabs.TestManagement;
 
 import Classes.Account.User;
-import Classes.Class;
+import Classes.Quiz.Class;
 import Classes.DataPersistence;
 import Classes.Quiz.Question;
 import Classes.Quiz.Test;
-import Enums.QuestionType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -18,9 +17,6 @@ import javafx.stage.Stage;
 import java.net.URL;
 import java.util.*;
 import java.util.function.Predicate;
-
-import static Enums.QuestionType.Arithmetic;
-import static Enums.QuestionType.MultiChoice;
 
 public class TestDetailsController implements Initializable {
 

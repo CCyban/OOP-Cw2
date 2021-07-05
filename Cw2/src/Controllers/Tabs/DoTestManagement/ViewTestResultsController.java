@@ -1,7 +1,7 @@
 package Controllers.Tabs.DoTestManagement;
 
 import Classes.Account.User;
-import Classes.Class;
+import Classes.Quiz.Class;
 import Classes.DataPersistence;
 import Classes.Quiz.Result;
 import Classes.Quiz.Test;
@@ -22,7 +22,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;

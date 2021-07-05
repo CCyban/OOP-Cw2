@@ -1,7 +1,7 @@
 package Controllers.Tabs.DoTestManagement;
 
 import Classes.Account.User;
-import Classes.Class;
+import Classes.Quiz.Class;
 import Classes.DataPersistence;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;

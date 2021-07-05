@@ -1,7 +1,7 @@
 package Controllers.Tabs.ClassManagement;
 
 import Classes.Account.User;
-import Classes.Class;
+import Classes.Quiz.Class;
 import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

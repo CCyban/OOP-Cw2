@@ -1,8 +1,7 @@
 package Controllers.Tabs.ClassManagement;
 
-import Classes.Class;
+import Classes.Quiz.Class;
 import Classes.DataPersistence;
-import Classes.Quiz.Result;
 import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

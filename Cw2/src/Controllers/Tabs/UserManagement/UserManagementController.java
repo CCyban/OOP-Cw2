@@ -1,10 +1,9 @@
 package Controllers.Tabs.UserManagement;
 
 import Classes.Account.User;
-import Classes.Class;
+import Classes.Quiz.Class;
 import Classes.DataPersistence;
 import Classes.Quiz.Result;
-import Classes.Quiz.Test;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;

@@ -1,7 +1,5 @@
 package Classes.Quiz;
 
-import Classes.Account.User;
-import Classes.Class;
 import Classes.DataPersistence;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
