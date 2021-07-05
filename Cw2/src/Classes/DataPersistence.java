@@ -2,18 +2,16 @@ package Classes;
 
 import Classes.Account.SysAdmin;
 import Classes.Account.User;
-import Classes.Quiz.Question;
 import Classes.Quiz.Result;
 import Enums.AccountType;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.Alert;
 
 import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 public class DataPersistence {
     public static List loadBank(String bankName) {
@@ -34,9 +32,6 @@ public class DataPersistence {
             ResultSet rs = pstmt.executeQuery();
 
             while (rs.next()) {
-                System.out.println(rs.getString("BankName"));
-                System.out.println(rs.getBinaryStream("SerialisedBankBlob"));
-
                 if (rs.getBinaryStream("SerialisedBankBlob") == null) { // If there isn't anything stored inside the selected bank
                     rs.close();
                     pstmt.close();
@@ -44,7 +39,8 @@ public class DataPersistence {
                     return null;
                 }
 
-                ObjectInputStream inputStream = new ObjectInputStream(rs.getBinaryStream("SerialisedBankBlob"));    // Column to read
+                // Column to read
+                ObjectInputStream inputStream = new ObjectInputStream(rs.getBinaryStream("SerialisedBankBlob"));
 
                 // Deserialization of the object
                 listData = (List) inputStream.readObject();
@@ -57,11 +53,9 @@ public class DataPersistence {
             }
         }
         catch (Exception ex) {
-            System.err.println("Exception from loading a bank");
-            System.err.println( ex.getClass().getName() + ": " + ex.getMessage() );
+            new Alert(Alert.AlertType.ERROR, "Failed to load data from data bank(s)").show();
             System.exit(0);
         }
-        System.out.println("Loaded");
         return listData;
     }
 
@@ -88,21 +82,11 @@ public class DataPersistence {
 
             // Executing the prepared statement
             pstmt.executeUpdate();
-
-            /*
-            // Close to avoid memory leaks
-            out.close();
-            pstmt.close();
-            c.close();
-
-             */
         }
         catch (Exception ex) {
-            System.err.println("Exception from saving a bank");
-            System.err.println(ex.getClass().getName() + ": " + ex.getMessage());
+            new Alert(Alert.AlertType.ERROR, "Failed to save data into data bank(s)").show();
             System.exit(0);
         }
-        System.out.println("Saved");
     }
 
     // Updating the data in the resultBank file if any
@@ -171,8 +155,6 @@ public class DataPersistence {
         catch (Exception ex) {
             addDefaults(c);
         }
-        System.out.println("Checked for default admins");
-        System.out.println();
     }
 
     protected static void addDefaults(Connection c) {
